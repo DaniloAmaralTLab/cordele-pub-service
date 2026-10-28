@@ -15,13 +15,12 @@ import { parseEpubcheckReport } from './epubcheck-report.parser';
 const execFileAsync = promisify(execFile);
 
 /**
- * EpubcheckValidationAdapter — infrastructure adapter for `EpubValidationPort`
- * (PUB-010, P4, ADR-003).
+ * EpubcheckValidationAdapter — infrastructure adapter for `EpubValidationPort`.
  *
  * Executes epubcheck as a child process:
  *   `java -jar $EPUBCHECK_JAR_PATH --json <report.json> <epub.epub>`
  *
- * ### Failure modes → always `erros_criticos` (ADR-003: never publish unvalidated)
+ * ### Failure modes → always `erros_criticos` (never publish unvalidated)
  * - `EPUBCHECK_JAR_PATH` not set           → CONFIG-001
  * - JRE missing / java not on PATH         → CONFIG-001
  * - Child process crash (non-zero exit)    → PROCESS-001
@@ -31,7 +30,7 @@ const execFileAsync = promisify(execFile);
  * Temp files (`.epub` + `.json`) are removed in a `finally` block even when
  * the process throws — no temp file leaks.
  *
- * RULE-05: imports only from domain/ (enums, parser) and modules/pub/ports/
+ * Imports only from domain/ (enums, parser) and modules/pub/ports/
  * (interface type — no implementation classes imported from modules/).
  */
 @Injectable()
@@ -43,7 +42,7 @@ export class EpubcheckValidationAdapter implements EpubValidationPort {
     this.jarPath = this.config.get<string>('EPUBCHECK_JAR_PATH');
     if (!this.jarPath) {
       this.logger.warn(
-        'EPUBCHECK_JAR_PATH is not configured — epubcheck validation will fail with com_erros (ADR-003)',
+        'EPUBCHECK_JAR_PATH is not configured — epubcheck validation will fail with com_erros',
       );
     }
   }
@@ -107,7 +106,7 @@ export class EpubcheckValidationAdapter implements EpubValidationPort {
   }
 }
 
-/** Synthetic `ValidationReport` for when epubcheck cannot run (ADR-003). */
+/** Synthetic `ValidationReport` for when epubcheck cannot run. */
 export function buildConfigErrorReport(reason: string): ValidationReport {
   return parseEpubcheckReport('', reason);
 }

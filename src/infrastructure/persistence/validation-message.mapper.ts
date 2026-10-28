@@ -8,7 +8,7 @@ import { ValidationSeverity } from '../../domain/pub/validation-severity.enum';
  * `ValidationMessageEntity`.
  *
  * This is the ONLY file allowed to know both the Prisma row shape and the
- * domain entity shape (RULE-01/02: domain/ never imports @prisma/client).
+ * domain entity shape (domain/ never imports @prisma/client).
  * Explicit field mapping ensures schema renames surface here as compile
  * errors, not silent `undefined` values in domain logic.
  */
@@ -18,7 +18,7 @@ export class ValidationMessageMapper {
    *
    * The `severity` column is stored as a plain string in the DB; it is cast
    * to `ValidationSeverity` here (the DB constraint `chk_validation_message_severity`
-   * guarantees the value is always valid — data-model.md §2.2).
+   * guarantees the value is always valid).
    */
   static toDomain(model: ValidationMessageModel): ValidationMessageEntity {
     return new ValidationMessageEntity({

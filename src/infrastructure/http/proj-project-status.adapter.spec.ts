@@ -1,5 +1,5 @@
 /**
- * Unit spec for ProjProjectStatusAdapter (INT-PUB-003, P6).
+ * Unit spec for ProjProjectStatusAdapter.
  *
  * All HTTP calls are intercepted via `jest.spyOn(global, 'fetch')` — no real
  * network calls. Covers:
@@ -9,7 +9,7 @@
  *  - Network error → ProjectStatusAdvanceError
  *  - Bearer token forwarding in Authorization header
  *
- * RULE-08: no console.log — NestJS Logger calls are naturally suppressed in
+ * No console.log — NestJS Logger calls are naturally suppressed in
  * test environment.
  */
 
@@ -160,7 +160,7 @@ describe('ProjProjectStatusAdapter', () => {
     expect(fetchSpy.mock.calls[0]![0]).toContain(customUrl);
   });
 
-  it('throws during construction when PROJ_SERVICE_BASE_URL env var is absent (SD-01 guard)', () => {
+  it('throws during construction when PROJ_SERVICE_BASE_URL env var is absent', () => {
     // Validates that the adapter fails loudly at boot time instead of silently
     // falling back to a wrong default. This test would break if getOrThrow()
     // were reverted to config.get() ?? 'default'.

@@ -27,21 +27,21 @@ interface ImpEstruturaResponse {
 }
 
 /**
- * HTTP adapter for `ManuscriptContentPort` (INT-PUB-001, P6).
+ * HTTP adapter for `ManuscriptContentPort`.
  *
  * Calls the IMP service via two sequential HTTP requests:
  *  1. `GET /api/v1/imp/projetos/{projetoId}/manuscritos` — resolve the most
  *     recent manuscritoId for the project (newest first per IMP's sort order).
  *  2. `GET /api/v1/imp/manuscripts/{manuscritoId}/estrutura` — fetch the
- *     canonical ContentTree and map it to `ManuscriptContentTree`.
+ *     manuscript's content tree.
  *
  * The bearer token from the originating request is forwarded as-is so the IMP
  * service can authenticate the call under the same user principal.
  *
- * RULE-05: infrastructure/ does not import modules/; only the port interface
+ * infrastructure/ does not import modules/; only the port interface
  *   (type-only) and pure domain types are imported.
- * RULE-06: outbound HTTP clients live only in `infrastructure/http/`.
- * RULE-08: no console.log — Nest Logger only.
+ * outbound HTTP clients live only in `infrastructure/http/`.
+ * no console.log — Nest Logger only.
  */
 @Injectable()
 export class ImpManuscriptContentAdapter implements ManuscriptContentPort {
@@ -166,8 +166,6 @@ export class ImpManuscriptContentAdapter implements ManuscriptContentPort {
       return null;
     }
 
-    // IMP's ContentTree has shape { chapters: Chapter[], orphanUnparsedSegments: [] }.
-    // EpubBuilder expects estrutura to be an array of chapter-like nodes.
     const chapters = Array.isArray(body.estrutura?.chapters) ? body.estrutura.chapters : [];
 
     return {

@@ -7,7 +7,7 @@ import type { FileStoragePort } from './ports/file-storage.port';
 import { PublicationHistoryService } from './publication-history.service';
 
 /**
- * Unit tests for `PublicationHistoryService` (PUB-014).
+ * Unit tests for `PublicationHistoryService`.
  *
  * `PublicationHistoryService` implements `PublicationHistoryPort` and provides
  * three operations: `latest` (batched summary), `history` (full list), and
@@ -26,7 +26,7 @@ import { PublicationHistoryService } from './publication-history.service';
  *   - `signedDownloadUrl` returns signed URL for publicado (valido).
  *   - `signedDownloadUrl` returns signed URL for publicado (avisos).
  *
- * RULE-04: this spec is in modules/ and only imports from domain/ and other
+ * This spec is in modules/ and only imports from domain/ and other
  * modules/ — no infrastructure/ imports.
  */
 describe('PublicationHistoryService', () => {

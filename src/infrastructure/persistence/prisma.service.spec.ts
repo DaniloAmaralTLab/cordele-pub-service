@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 
 /**
- * Unit tests for `PrismaService` (PUB-007).
+ * Unit tests for `PrismaService`.
  *
  * `PrismaService` extends `PrismaClient` and manages the connection lifecycle
  * via the NestJS `OnModuleInit` / `OnModuleDestroy` hooks. The tests mock

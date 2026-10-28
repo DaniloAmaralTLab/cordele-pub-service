@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-/** Signed download URL response (api-contract.md §4.4 — T08, D-F/D-R). */
+/** Signed download URL response. */
 export class DownloadUrlDto {
   @ApiProperty({ format: 'uuid' })
   publicacaoId!: string;

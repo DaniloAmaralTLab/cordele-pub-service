@@ -1,6 +1,6 @@
 /**
  * The only two terminal targets PUB ever requests — mirrored from the port
- * to keep domain/ free of modules/ imports (RULE-01/02).
+ * to keep domain/ free of modules/ imports.
  */
 export type ProjetoTargetStatusDomain = 'publicado' | 'com_erros';
 
@@ -10,9 +10,9 @@ export type ProjetoTargetStatusDomain = 'publicado' | 'com_erros';
  *
  * `PublicationBuildJob.requestProjectStatus` catches this and logs it without
  * discarding the `Publicacao` outcome — the build result is never lost due to
- * a downstream status-advance failure (integration-contracts.md §2.4).
+ * a downstream status-advance failure.
  *
- * RULE-01/02: domain error — zero @nestjs/*, @prisma/client, and modules/
+ * Domain error — zero @nestjs/*, @prisma/client, and modules/
  * imports. `ProjetoTargetStatus` is redeclared locally to preserve the type
  * constraint without crossing the hexagonal boundary.
  */

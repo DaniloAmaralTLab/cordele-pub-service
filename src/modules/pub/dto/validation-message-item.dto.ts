@@ -1,10 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 /**
- * One epubcheck report line returned by `GET .../validation-messages`
- * (api-contract §4.6, PUB-016).
+ * One epubcheck report line returned by `GET .../validation-messages`.
  *
- * Shape aligned with `validation_message` schema (data-model.md §2.2) and
+ * Shape aligned with `validation_message` schema and
  * `ValidationMessageEntity`. Domain models are never returned from
  * controllers — this DTO is the only shape crossing the HTTP boundary.
  */

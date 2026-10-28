@@ -8,7 +8,7 @@ export interface ValidationReportMessage {
   readonly location?: string;
 }
 
-/** epubcheck's parsed report — `verdict` is derived from message severities (D-Q). */
+/** epubcheck's parsed report — `verdict` is derived from message severities. */
 export interface ValidationReport {
   readonly verdict: EpubcheckStatus.VALIDO | EpubcheckStatus.AVISOS | EpubcheckStatus.ERROS_CRITICOS;
   readonly messages: readonly ValidationReportMessage[];
@@ -16,15 +16,15 @@ export interface ValidationReport {
 
 /**
  * Outbound port: epubcheck validation, the one external tool PUB integrates
- * with (integration-contracts.md §3.1, ADR-003).
+ * with.
  *
  * epubcheck's verdict is authoritative for `publicado` vs `com_erros`; the
  * domain knows only a verdict, never a Java process. If epubcheck cannot
  * run, the caller must record `com_erros` — an unvalidated artifact is
  * never published (doc 01 core promise).
  *
- * Adapter (`EpubcheckValidationAdapter`, PUB-010) binds in P4, running
- * epubcheck as a child process. P2 use cases are tested against Jest mocks
+ * The adapter (`EpubcheckValidationAdapter`) runs
+ * epubcheck as a child process. Use cases are tested against Jest mocks
  * of this interface.
  */
 export interface EpubValidationPort {

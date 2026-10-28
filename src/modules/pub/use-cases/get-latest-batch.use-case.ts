@@ -10,12 +10,12 @@ export interface GetLatestBatchInput {
 
 /**
  * GetLatestBatchUseCase — returns the latest publication summary for a batch
- * of projects in a SINGLE repository query (api-contract §4.7).
+ * of projects in a SINGLE repository query.
  *
  * Called by PROJ via REST POST /api/v1/pub/publications/latest-batch.
  * Projects with no publications are omitted from the result (absent = never published).
  *
- * RULE-07: requires the empresa context before touching the repository.
+ * Requires the empresa context before touching the repository.
  */
 @Injectable()
 export class GetLatestBatchUseCase {

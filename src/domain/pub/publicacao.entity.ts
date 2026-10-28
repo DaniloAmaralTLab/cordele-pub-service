@@ -13,24 +13,23 @@ export interface PublicacaoProps {
   readonly totalAvisos: number;
   readonly iniciadaEm: Date;
   readonly concluidaEm?: Date;
-  /** Tamanho do arquivo .epub em bytes (ADR-004). Nulo até status=publicado. */
+  /** Tamanho do arquivo .epub em bytes. Nulo até status=publicado. */
   readonly tamanhoBytes?: number;
-  /** Número de capítulos no ePub gerado (ADR-004). Nulo até status=publicado. */
+  /** Número de capítulos no ePub gerado. Nulo até status=publicado. */
   readonly totalCapitulos?: number;
-  /** Número de imagens referenciadas no ePub gerado (ADR-004). Nulo até status=publicado. */
+  /** Número de imagens referenciadas no ePub gerado. Nulo até status=publicado. */
   readonly totalImagens?: number;
 }
 
 /**
- * `Publicacao` aggregate root — one ePub export attempt (PUB context,
- * data-model.md §2.1).
+ * `Publicacao` aggregate root — one ePub export attempt.
  *
- * Carries two independent status fields (api-contract §0 D-Q): `status` is
+ * Carries two independent status fields: `status` is
  * the async build-machine state (`gerando -> validando -> publicado |
- * com_erros`, ADR-002), `epubcheckStatus` is the epubcheck verdict
- * (ADR-003). Append-only history: a terminal instance is never mutated in
+ * com_erros`), `epubcheckStatus` is the epubcheck verdict.
+ * Append-only history: a terminal instance is never mutated in
  * place — every transition returns a new instance. Pure domain object: zero
- * `@nestjs/*` and zero `@prisma/client` (RULE-01/02).
+ * `@nestjs/*` and zero `@prisma/client`.
  */
 export class PublicacaoEntity {
   readonly id: string;
@@ -44,11 +43,11 @@ export class PublicacaoEntity {
   readonly totalAvisos: number;
   readonly iniciadaEm: Date;
   readonly concluidaEm?: Date;
-  /** Tamanho do arquivo .epub em bytes (ADR-004). Nulo até status=publicado. */
+  /** Tamanho do arquivo .epub em bytes. Nulo até status=publicado. */
   readonly tamanhoBytes?: number;
-  /** Número de capítulos no ePub gerado (ADR-004). Nulo até status=publicado. */
+  /** Número de capítulos no ePub gerado. Nulo até status=publicado. */
   readonly totalCapitulos?: number;
-  /** Número de imagens referenciadas no ePub gerado (ADR-004). Nulo até status=publicado. */
+  /** Número de imagens referenciadas no ePub gerado. Nulo até status=publicado. */
   readonly totalImagens?: number;
 
   constructor(props: PublicacaoProps) {
@@ -69,7 +68,7 @@ export class PublicacaoEntity {
     this.totalImagens = props.totalImagens;
   }
 
-  /** Starts a new build attempt (D-N): status=gerando, epubcheckStatus=pendente. */
+  /** Starts a new build attempt: status=gerando, epubcheckStatus=pendente. */
   static iniciar(props: {
     id: string;
     projetoId: string;
@@ -95,10 +94,10 @@ export class PublicacaoEntity {
   }
 
   /**
-   * `validando -> publicado`. Warnings do not block publication (D-Q): an
+   * `validando -> publicado`. Warnings do not block publication: an
    * `avisos` epubcheck verdict still yields a downloadable artifact.
    *
-   * ADR-004: os campos `tamanhoBytes`, `totalCapitulos` e `totalImagens` são
+   * Os campos `tamanhoBytes`, `totalCapitulos` e `totalImagens` são
    * preenchidos apenas nesta transição — ficam nulos nas demais.
    */
   concluirPublicado(outcome: {
@@ -149,7 +148,7 @@ export class PublicacaoEntity {
     return this.status === PublicacaoStatus.PUBLICADO || this.status === PublicacaoStatus.COM_ERROS;
   }
 
-  /** `true` only when `status=publicado` (`arquivoDisponivel`, api-contract §6.1). */
+  /** `true` only when `status=publicado` (`arquivoDisponivel`). */
   arquivoDisponivel(): boolean {
     return this.status === PublicacaoStatus.PUBLICADO;
   }

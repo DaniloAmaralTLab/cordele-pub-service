@@ -1,14 +1,12 @@
 -- =============================================================================
 -- Prisma migration: add_epub_summary_kpi_fields
 -- Service:   pub-service
--- Issue:     PUB-021 / ADR-004
--- Generated: 2026-09-03 (manual — implementador P13)
--- Fixed:     2026-09-05 — removido bloco com schema emp_aetos hardcoded (RULE-09 /
---            multi-empresa: DDL nunca qualifica schema de empresa; o search_path da
---            conexão resolve para o schema correto de cada empresa).
+-- Date:      2026-09-03
+-- Nota:      a DDL nunca qualifica o schema da empresa; o search_path da
+--            conexão resolve para o schema correto de cada empresa.
 --
--- ADR-004: adiciona os 3 campos de KPI de ePub ao aggregate `publicacao`.
--- `paginas` foi deliberadamente omitido (ADR-004 §D-S: remoção permanente).
+-- Adiciona os 3 campos de KPI de ePub ao aggregate `publicacao`.
+-- `paginas` foi deliberadamente omitido (remoção permanente).
 -- Todos os campos são nullable — nulos até a conclusão do build (status=publicado).
 -- =============================================================================
 

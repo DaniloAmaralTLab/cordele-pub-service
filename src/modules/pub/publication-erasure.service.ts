@@ -6,8 +6,7 @@ import { FILE_STORAGE_PORT, PUBLICACAO_REPOSITORY_PORT } from './pub.tokens';
 import type { FileStoragePort } from './ports/file-storage.port';
 
 /**
- * PublicationErasureService — in-process implementation of PublicationErasurePort
- * (PUB-015, P6 — integration-contracts §1.2).
+ * PublicationErasureService — in-process implementation of PublicationErasurePort.
  *
  * Exported by PubModule under the PUBLICATION_ERASURE_PORT token so PROJ can
  * inject it directly in a co-located deployment. In microservice deployments,
@@ -16,17 +15,17 @@ import type { FileStoragePort } from './ports/file-storage.port';
  *
  * Erasure is idempotent:
  *  - `deleteAllByProjeto` is a `deleteMany` — 0 rows deleted is not an error.
- *  - `FileStoragePort.delete` swallows ENOENT (DiskFileStorageAdapter, PUB-011).
+ *  - `FileStoragePort.delete` swallows ENOENT (DiskFileStorageAdapter).
  *  - A second call for an already-erased project therefore succeeds silently.
  *
  * Failure contract: any unexpected error (DB down, storage non-ENOENT failure)
  * propagates so the PROJ cascade aborts before deleting the project row
  * (contract: "falha em PUB nao deleta projeto_editorial", PROJ-016).
  *
- * RULE-04: this file is in modules/ and does NOT import from infrastructure/.
+ * This file is in modules/ and does NOT import from infrastructure/.
  *   Both ports arrive via DI constructor injection.
- * RULE-07: empresaId carried explicitly for logging — tenant isolation is at the
- *   schema level (schema-per-empresa, ADR-003).
+ * empresaId carried explicitly for logging — tenant isolation is at the
+ *   schema level (schema-per-empresa).
  */
 @Injectable()
 export class PublicationErasureService implements PublicationErasurePort {

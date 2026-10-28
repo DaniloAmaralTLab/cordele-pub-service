@@ -1,4 +1,4 @@
-/** Persisted `Metadados` (comp api-contract §6.1 minus `materialized`). */
+/** Persisted `Metadados` (minus `materialized`). */
 export interface MetadadosRead {
   readonly projetoId: string;
   readonly titulo: string | null;
@@ -12,15 +12,13 @@ export interface MetadadosRead {
 }
 
 /**
- * Outbound port: editorial metadata, owned by COMP's `GetMetadadosUseCase`
- * (integration-contracts.md §2.2, D-I).
+ * Outbound port: editorial metadata, owned by COMP's `GetMetadadosUseCase`.
  *
  * `null` means the project's composition was never saved — the export
- * pre-flight rejects with 422 metadata-incomplete (api-contract §7.1); PUB
+ * pre-flight rejects with 422 metadata-incomplete; PUB
  * validates presence of `titulo`/`autor`/`idioma`, COMP does not.
  *
- * Stub adapter binds in P4 (PUB-012); real adapter in P6 (INT-PUB-002). P2
- * use cases are tested against Jest mocks of this interface.
+ * Use cases are tested against Jest mocks of this interface.
  */
 export interface CompositionMetadataPort {
   get(projetoId: string): Promise<MetadadosRead | null>;

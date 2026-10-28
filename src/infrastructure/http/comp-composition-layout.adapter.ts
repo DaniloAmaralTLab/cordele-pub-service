@@ -26,8 +26,8 @@ interface CompLayoutOverrideRaw {
  * Raw shape of the COMP `GET /api/v1/comp/projetos/:projetoId/layout` response.
  *
  * When `materialized === false`, the comp-service returns a synthesised default
- * (D-M / api-contract §4.5). PUB treats this as `null` — `null` layout is a
- * graceful fallback (EpubBuilder uses COMP defaults §7.2); unlike metadata,
+ *. PUB treats this as `null` — `null` layout is a
+ * graceful fallback (EpubBuilder uses COMP defaults); unlike metadata,
  * absent layout does not abort the export.
  */
 interface CompLayoutResponse {
@@ -45,7 +45,7 @@ interface CompLayoutResponse {
 }
 
 /**
- * HTTP adapter for `CompositionLayoutPort` (INT-PUB-002, P10).
+ * HTTP adapter for `CompositionLayoutPort`.
  *
  * Calls the COMP service:
  *   GET /api/v1/comp/projetos/{projetoId}/layout
@@ -58,10 +58,10 @@ interface CompLayoutResponse {
  * already constrains `tipo` to these two values, but the filter is explicit here
  * for forward-compatibility.
  *
- * RULE-05: infrastructure/ does not import modules/; only port interfaces
+ * infrastructure/ does not import modules/; only port interfaces
  *   (type-only) are imported.
- * RULE-06: outbound HTTP clients live only in `infrastructure/http/`.
- * RULE-08: no console.log — Nest Logger only.
+ * outbound HTTP clients live only in `infrastructure/http/`.
+ * no console.log — Nest Logger only.
  */
 @Injectable()
 export class CompCompositionLayoutAdapter implements CompositionLayoutPort {
@@ -119,7 +119,7 @@ export class CompCompositionLayoutAdapter implements CompositionLayoutPort {
     }
 
     // COMP returns materialized=false when no layout has been saved yet.
-    // null layout is a graceful fallback (EpubBuilder uses COMP defaults §7.2).
+    // null layout is a graceful fallback (EpubBuilder uses COMP defaults).
     if (!body.materialized) {
       this.logger.debug(
         `COMP layout for projeto ${projetoId} is not materialized — returning null`,

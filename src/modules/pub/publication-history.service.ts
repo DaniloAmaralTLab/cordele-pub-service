@@ -11,22 +11,21 @@ import type { PublicacaoRepositoryPort } from '../../domain/pub/ports/publicacao
 import { FILE_STORAGE_PORT, PUBLICACAO_REPOSITORY_PORT } from './pub.tokens';
 import type { FileStoragePort } from './ports/file-storage.port';
 
-/** Short TTL for PROJ's signed download URL (D-F, matches GetSignedDownloadUrlUseCase). */
+/** Short TTL for PROJ's signed download URL (matches GetSignedDownloadUrlUseCase). */
 const DOWNLOAD_URL_TTL_SECONDS = 300;
 
 /**
- * PublicationHistoryService — in-process implementation of PublicationHistoryPort
- * (PUB-014, P6 — integration-contracts §1.1).
+ * PublicationHistoryService — in-process implementation of PublicationHistoryPort.
  *
  * Exported by PubModule under the PUBLICATION_HISTORY_PORT token so PROJ can
  * inject it directly in a co-located (monolith) deployment. In microservice
  * deployments PROJ uses the HTTP adapter (proj-service PubPublicationHistoryAdapter)
  * which calls PUB's REST endpoints backed by this service.
  *
- * RULE-04: this file is in modules/ and does NOT import from infrastructure/.
+ * This file is in modules/ and does NOT import from infrastructure/.
  *   It receives both ports via DI constructor injection.
- * RULE-07: empresaId is passed explicitly on every call — tenant schema isolation
- *   is enforced at the Prisma connection level (schema-per-empresa, ADR-003).
+ * empresaId is passed explicitly on every call — tenant schema isolation
+ *   is enforced at the Prisma connection level (schema-per-empresa).
  *   empresaId is used here for logging/tracing only.
  */
 @Injectable()
@@ -42,7 +41,7 @@ export class PublicationHistoryService implements PublicationHistoryPort {
 
   /**
    * Returns the latest publication summary per projetoId.
-   * ONE batched repository call — no N+1 (integration-contracts §1.1).
+   * ONE batched repository call — no N+1.
    */
   async latest(
     projetoIds: string[],

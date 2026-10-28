@@ -21,7 +21,7 @@ import {
 
 /**
  * HTTP-level validation tests for the batch size limit on
- * POST /api/v1/pub/publications/latest-batch (§4.7 api-contract.md).
+ * POST /api/v1/pub/publications/latest-batch.
  *
  * Exactly 50 IDs → 200.
  * 51 IDs          → 400 (ValidationPipe enforces @ArrayMaxSize(50)).

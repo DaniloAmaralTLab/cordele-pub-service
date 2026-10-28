@@ -1,17 +1,17 @@
 /**
  * Serializes content-tree block nodes into XHTML 1.1 documents suitable
- * for inclusion in an ePub 3 OCF package (SPEC-03 §2).
+ * for inclusion in an ePub 3 OCF package.
  *
  * Domain-pure: no @nestjs/* or @prisma/* imports.
  *
- * Supported block types (aligned with IMP api-contract §6.2):
+ * Supported block types:
  *   - paragraph  → <p> with inline run/mark spans
  *   - heading    → <h1>/<h2>/<h3>
  *   - image      → <img> with relative OEBPS path; alignment applied via CSS class
- *   - unparsed   → <div class="unparsed"> preserving raw content (D-H: never discarded)
+ *   - unparsed   → <div class="unparsed"> preserving raw content (never discarded)
  */
 
-/** Text run mark types surfaced by IMP (api-contract §6.2). */
+/** Text run mark types surfaced by IMP. */
 export type RunMark = 'bold' | 'italic' | 'underline';
 
 export interface RunNode {
@@ -97,7 +97,7 @@ function serializeBlock(block: ContentBlock): string {
       return `<img src="${imgPath}" alt="${alt}"${cssClass}/>`;
     }
     case 'unparsed': {
-      // Preserve raw content in a dedicated div (D-H: unparsed blocks never discarded)
+      // Preserve raw content in a dedicated div (unparsed blocks are never discarded)
       return `<div class="unparsed">${block.rawHtml}</div>`;
     }
   }
@@ -143,7 +143,7 @@ export function buildChapterXhtml(chapter: ChapterNode, cssPath: string, idioma:
 
 /**
  * Builds the ePub 3 nav document (navigation document required by spec).
- * Uses epub:type="toc" as required by ePub 3 (SPEC-03 §2).
+ * Uses epub:type="toc" as required by ePub 3.
  */
 export function buildNavXhtml(
   bookTitle: string,

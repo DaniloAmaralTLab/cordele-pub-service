@@ -27,7 +27,7 @@ export const IS_PUBLIC_KEY = 'isPublic';
  * IMPORTANT: must stay in sync with `REQUIRED_SCOPES_KEY` in
  * `modules/pub/decorators/require-scope.decorator.ts`. Both files use the
  * same string literal so guard and decorator cooperate without either layer
- * importing the other (RULE-04).
+ * importing the other.
  */
 export const REQUIRED_SCOPES_KEY = 'requiredScopes';
 
@@ -39,7 +39,7 @@ export const Public = (): MethodDecorator & ClassDecorator =>
  * Declares the OAuth2 scopes required to access a route (infrastructure copy).
  *
  * Controllers in `modules/` must use `RequiredScopes` from
- * `modules/pub/decorators/require-scope.decorator.ts` (RULE-04). This export
+ * `modules/pub/decorators/require-scope.decorator.ts`. This export
  * exists only for use within `infrastructure/auth/` tests.
  */
 export const RequiredScopes = (...scopes: string[]): MethodDecorator & ClassDecorator =>

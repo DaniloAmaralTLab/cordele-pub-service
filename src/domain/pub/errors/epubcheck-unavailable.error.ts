@@ -3,9 +3,9 @@
  * (missing JRE, missing JAR path, or process spawn failure).
  *
  * Handlers MUST record `PublicacaoStatus.COM_ERROS` — an unvalidated artifact
- * is never published (ADR-003, api-contract §7.2 core promise).
+ * is never published.
  *
- * Pure domain error: zero `@nestjs/*` and zero `@prisma/client` (RULE-01/02).
+ * Pure domain error: zero `@nestjs/*` and zero `@prisma/client`.
  */
 export class EpubcheckUnavailableError extends Error {
   constructor(reason: string) {

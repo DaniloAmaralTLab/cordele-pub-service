@@ -1,5 +1,5 @@
 /**
- * pub-reconcile-orphans.ts — Script de reconciliação de builds órfãos (PUB-020).
+ * pub-reconcile-orphans.ts — Script de reconciliação de builds órfãos.
  *
  * Identifica publicações presas em status não-terminal (`gerando`/`validando`)
  * por mais de `--timeout-minutes` minutos e, opcionalmente, as marca como

@@ -10,7 +10,7 @@ import { PrismaEmpresaService } from './prisma-empresa.service';
  *   - `PrismaService` — single global PrismaClient for schema-agnostic operations
  *     (health checks, raw SQL in tests, etc.).
  *   - `PrismaEmpresaService` — per-schema PrismaClient factory for tenant-isolated
- *     data access (ADR-003, D-619). Repositories inject this instead of `PrismaService`.
+ *     data access. Repositories inject this instead of `PrismaService`.
  *
  * `@Global()` because the connection is genuinely a singleton resource; feature
  * modules still import `PersistenceModule` to express the dependency explicitly.

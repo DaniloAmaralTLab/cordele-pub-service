@@ -1,4 +1,4 @@
-# Runbook: Reconciliação de Build Órfão (PUB-020)
+# Runbook: reconciliação de build órfão
 
 ## 1. Cenário de risco
 
@@ -6,18 +6,18 @@ Um crash do processo `pub-service` durante o build de um ePub — por OOM, resta
 SIGKILL ou falha de infraestrutura — deixa a linha `Publicacao` presa nos status
 `gerando` ou `validando` indefinidamente.
 
-O índice parcial `uq_publicacao_projeto_inflight` (criado em PUB-007) garante unicidade de
+O índice parcial `uq_publicacao_projeto_inflight` garante unicidade de
 publicações em voo por projeto: enquanto a linha órfã existir em status `gerando` ou
-`validando`, todos os novos exports do mesmo projeto falham com conflito de índice (D-R).
+`validando`, todos os novos exports do mesmo projeto falham com conflito de índice.
 O projeto fica bloqueado até que o operador intervenha manualmente.
 
-No MVP não existe timeout automático (SPEC-05 §assunção pós-POC). Este runbook cobre o
+Hoje não existe timeout automático. Este runbook cobre o
 procedimento de identificação e correção manual.
 
 ## 2. Critério de identificação
 
 Query de diagnóstico — executar conectado ao banco de dados do ambiente afetado.
-O operador deve especificar o schema correto (`emp_aetos` no MVP):
+O operador deve especificar o schema correto (hoje, `emp_aetos`):
 
 ```sql
 SET search_path = emp_aetos;
@@ -37,7 +37,7 @@ Alternativa via script (requer `DATABASE_URL` e `ts-node`/`tsx`):
 
 ```bash
 DATABASE_URL="postgresql://..." \
-  npx tsx backend/services/pub-service/scripts/pub-reconcile-orphans.ts \
+  npx tsx scripts/pub-reconcile-orphans.ts \
   --dry-run \
   --schema emp_aetos \
   --timeout-minutes 60
@@ -51,7 +51,7 @@ O `--dry-run` imprime a tabela de órfãos sem modificar nenhuma linha.
 
 ```bash
 DATABASE_URL="postgresql://..." \
-  npx tsx backend/services/pub-service/scripts/pub-reconcile-orphans.ts \
+  npx tsx scripts/pub-reconcile-orphans.ts \
   --dry-run \
   --schema emp_aetos \
   --timeout-minutes 60
@@ -65,7 +65,7 @@ em andamento iniciado há menos de 1 hora).
 
 ```bash
 DATABASE_URL="postgresql://..." \
-  npx tsx backend/services/pub-service/scripts/pub-reconcile-orphans.ts \
+  npx tsx scripts/pub-reconcile-orphans.ts \
   --schema emp_aetos \
   --timeout-minutes 60
 ```

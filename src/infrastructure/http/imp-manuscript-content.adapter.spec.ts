@@ -1,11 +1,11 @@
 /**
- * Unit spec for ImpManuscriptContentAdapter (INT-PUB-001, P6).
+ * Unit spec for ImpManuscriptContentAdapter.
  *
  * All HTTP calls are intercepted via `jest.spyOn(global, 'fetch')` — no real
  * network calls. Covers the two-step IMP protocol (list → estrutura), the
  * null-on-404 contract, and resilient error handling.
  *
- * RULE-08: no console.log — logger calls are suppressed via NestJS Logger mock.
+ * No console.log — logger calls are suppressed via NestJS Logger mock.
  */
 
 import { ConfigService } from '@nestjs/config';
@@ -169,7 +169,7 @@ describe('ImpManuscriptContentAdapter', () => {
     expect(fetchSpy.mock.calls[0]![0]).toContain(customUrl);
   });
 
-  it('throws during construction when IMP_SERVICE_URL env var is absent (SD-01 guard)', () => {
+  it('throws during construction when IMP_SERVICE_URL env var is absent', () => {
     // Validates that the adapter fails loudly at boot time instead of silently
     // falling back to a wrong default. This test would break if getOrThrow()
     // were reverted to config.get() ?? 'default'.

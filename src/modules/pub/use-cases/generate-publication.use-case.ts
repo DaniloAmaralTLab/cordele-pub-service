@@ -24,7 +24,7 @@ export interface GeneratePublicationInput {
    * the `Bearer ` prefix before being placed here. Propagated explicitly into
    * `PublicationBuildJobInput` so the fire-and-forget async job (running outside
    * the request scope, after `Promise.resolve().then(...)`) can pass it to the
-   * outbound HTTP adapters for IMP and PROJ (INT-PUB-001, INT-PUB-003).
+   * outbound HTTP adapters for IMP and PROJ.
    *
    * Optional: defaults to `''` so in-process callers (tests, BDD) are unaffected.
    */
@@ -33,23 +33,23 @@ export interface GeneratePublicationInput {
 
 export interface GeneratePublicationResult {
   readonly publicacao: PublicacaoEntity;
-  /** `false` when an in-flight build already existed (D-R idempotent no-op). */
+  /** `false` when an in-flight build already existed (idempotent no-op). */
   readonly isNew: boolean;
 }
 
 /**
- * GeneratePublicationUseCase — trigger an ePub 3 export (api-contract §4.1).
+ * GeneratePublicationUseCase — trigger an ePub 3 export.
  *
- * Synchronous pre-flight (§7.1) + idempotent trigger (D-R): if a build is
+ * Synchronous pre-flight + idempotent trigger: if a build is
  * already `gerando`/`validando` for the project, returns it without
  * starting a second job. Otherwise validates manuscript presence and
  * required metadata, creates the `Publicacao` in `gerando` and enqueues
- * `PublicationBuildJob` without blocking the request thread (§4 restrição:
- * `Promise.resolve().then(...)`).
+ * `PublicationBuildJob` without blocking the request thread
+ * (`Promise.resolve().then(...)`).
  *
- * RULE-04: this file is in modules/ and does NOT import from infrastructure/
+ * This file is in modules/ and does NOT import from infrastructure/
  * beyond the auth guard's `AuthenticatedUser` type.
- * RULE-07: requires the empresa context (via AuthenticatedUser) before
+ * requires the empresa context (via AuthenticatedUser) before
  * touching the repository.
  */
 @Injectable()
@@ -103,16 +103,16 @@ export class GeneratePublicationUseCase {
     });
     const saved = await this.repository.save(publicacao);
 
-    // Fire-and-forget: never block the request thread (Restrições arquiteturais §4).
+    // Fire-and-forget: never block the request thread.
     //
-    // INT-PUB-006: capture empresaId BEFORE leaving the synchronous callstack.
+    // capture empresaId BEFORE leaving the synchronous callstack.
     // AsyncLocalStorage loses context after Promise.resolve() yields — wrapping
     // buildJob.run inside empresaContextRunner.runAs restores it explicitly so
     // all sub-operations inside the job (repository saves, port calls) see the
     // correct Empresa schema. Two concurrent jobs for different empresas each
     // get an isolated AsyncLocalStorage entry (no shared state).
     //
-    // INT-PUB-001/003: capture bearerToken BEFORE yielding for the same reason —
+    // Capture bearerToken BEFORE yielding for the same reason —
     // the request context (headers) is gone after the first await outside this
     // callstack. Passing it explicitly through PublicationBuildJobInput lets the
     // async job propagate it to the IMP and PROJ HTTP adapters.
@@ -120,7 +120,7 @@ export class GeneratePublicationUseCase {
     const bearerToken = input.bearerToken ?? '';
     Promise.resolve()
       .then(() =>
-        // INT-PUB-002: pass bearerToken as third arg so runAs stores it in the
+        // pass bearerToken as third arg so runAs stores it in the
         // ALS context — CompCompositionMetadataAdapter / CompCompositionLayoutAdapter
         // retrieve it via getBearerToken() inside the async job, without changing
         // the port signatures for CompositionMetadataPort / CompositionLayoutPort.

@@ -28,7 +28,7 @@ interface ProjErrorResponse {
 }
 
 /**
- * HTTP adapter for `AdvanceProjetoStatusPort` (INT-PUB-003, P6).
+ * HTTP adapter for `AdvanceProjetoStatusPort`.
  *
  * Calls `POST /api/v1/proj/projetos/{projetoId}/advance-status` on the PROJ
  * service, forwarding the originating request's JWT so the PROJ service can
@@ -36,13 +36,12 @@ interface ProjErrorResponse {
  *
  * Error contract: any HTTP or network failure is surfaced as
  * `ProjectStatusAdvanceError` so `PublicationBuildJob.requestProjectStatus`
- * can log it without discarding the `Publicacao` outcome
- * (integration-contracts.md §2.4).
+ * can log it without discarding the `Publicacao` outcome.
  *
- * RULE-05: infrastructure/ does not import modules/; only port interfaces
+ * infrastructure/ does not import modules/; only port interfaces
  *   (type-only) and domain error classes are imported.
- * RULE-06: outbound HTTP clients live only in `infrastructure/http/`.
- * RULE-08: no console.log — Nest Logger only.
+ * outbound HTTP clients live only in `infrastructure/http/`.
+ * no console.log — Nest Logger only.
  */
 @Injectable()
 export class ProjProjectStatusAdapter implements AdvanceProjetoStatusPort {

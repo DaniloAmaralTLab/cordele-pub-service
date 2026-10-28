@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 import { CorrelationContextService } from './correlation-context.service';
 
 /**
- * CorrelationInterceptor — PUB-017 (P7, SPEC-07).
+ * CorrelationInterceptor.
  *
  * Ensures every response from `PubController` carries a `X-Correlation-Id`
  * header, and propagates the ID into `CorrelationContextService` (AsyncLocalStorage)
@@ -28,9 +28,9 @@ import { CorrelationContextService } from './correlation-context.service';
  *    outside NestJS scope may lose the store).
  *
  * Registered as `APP_INTERCEPTOR` in `PubObservabilityModule` so it covers
- * every route without `PubController` importing from `infrastructure/` (RULE-04).
+ * every route without `PubController` importing from `infrastructure/`.
  *
- * RULE-04: modules/ does not import infrastructure/. ✓
+ * modules/ does not import infrastructure/. ✓
  */
 @Injectable()
 export class CorrelationInterceptor implements NestInterceptor {

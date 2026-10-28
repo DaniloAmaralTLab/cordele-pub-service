@@ -1,9 +1,8 @@
 /**
- * Unit spec for PublicationBuildJob (PUB-004).
+ * Unit spec for PublicationBuildJob.
  *
  * All outbound ports mocked with jest.fn(). Covers the golden path
- * (gerando -> validando -> publicado, with warnings still publishing per
- * D-Q), the com_erros path, the storage-failure fallback, and that
+ * (gerando -> validando -> publicado, with warnings still publishing), the com_erros path, the storage-failure fallback, and that
  * advanceTo is requested exactly once and never discards the build result
  * when it fails.
  */
@@ -77,7 +76,7 @@ describe('PublicationBuildJob', () => {
     compositionLayoutPort = { get: jest.fn().mockResolvedValue(null) };
     epubValidationPort = { validate: jest.fn() };
     fileStoragePort = {
-      // ADR-004: put() retorna { url, bytesWritten }
+      // put() retorna { url, bytesWritten }
       put: jest.fn().mockResolvedValue({ url: 'stub://output.epub', bytesWritten: 1024 }),
       get: jest.fn(),
       delete: jest.fn(),
@@ -100,7 +99,7 @@ describe('PublicationBuildJob', () => {
     );
   });
 
-  it('publishes with warnings only — status=publicado, epubcheckStatus=avisos (D-Q)', async () => {
+  it('publishes with warnings only — status=publicado, epubcheckStatus=avisos', async () => {
     epubValidationPort.validate.mockResolvedValue({
       verdict: EpubcheckStatus.AVISOS,
       messages: [{ severity: ValidationSeverity.WARNING, code: 'W-001', message: 'minor issue' }],
@@ -158,7 +157,7 @@ describe('PublicationBuildJob', () => {
     );
   });
 
-  it('still persists the build outcome when advanceTo fails (integration-contracts §2.4 fallback)', async () => {
+  it('still persists the build outcome when advanceTo fails', async () => {
     epubValidationPort.validate.mockResolvedValue({ verdict: EpubcheckStatus.VALIDO, messages: [] });
     advanceProjetoStatusPort.advanceTo.mockRejectedValue(new Error('PROJ unavailable'));
 
@@ -179,7 +178,7 @@ describe('PublicationBuildJob', () => {
     expect(repository.save).not.toHaveBeenCalled();
   });
 
-  describe('PUB-004: domain events dispatched AFTER persistence (timing contract)', () => {
+  describe('domain events dispatched AFTER persistence (timing contract)', () => {
     it('emits publication.succeeded with correct payload after repository.save on happy path', async () => {
       epubValidationPort.validate.mockResolvedValue({ verdict: EpubcheckStatus.VALIDO, messages: [] });
       fileStoragePort.put.mockResolvedValue({ url: 'stub://output.epub', bytesWritten: 2048 });
@@ -265,7 +264,7 @@ describe('PublicationBuildJob', () => {
     });
   });
 
-  describe('ADR-004: campos KPI de resumo persistidos na publicação (tamanhoBytes, totalCapitulos, totalImagens)', () => {
+  describe('campos KPI de resumo persistidos na publicação (tamanhoBytes, totalCapitulos, totalImagens)', () => {
     it('persiste tamanhoBytes, totalCapitulos e totalImagens no aggregate publicado', async () => {
       epubValidationPort.validate.mockResolvedValue({ verdict: EpubcheckStatus.VALIDO, messages: [] });
       // bytesWritten retornado pelo put() simulado

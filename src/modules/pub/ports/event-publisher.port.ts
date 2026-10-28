@@ -5,8 +5,8 @@
  * Intentionally technology-neutral: a simple Node.js `EventEmitter` wrapper
  * satisfies this interface in production; `jest.fn()` satisfies it in tests.
  *
- * RULE-04: lives in modules/ (application layer), never in infrastructure/.
- * RULE-01/02: no @nestjs/* or @prisma/client imports.
+ * Lives in modules/ (application layer), never in infrastructure/.
+ * no @nestjs/* or @prisma/client imports.
  *
  * The signature matches Node.js `EventEmitter.emit` so an adapter can be
  * wired without importing @nestjs/event-emitter (which is not in the service's

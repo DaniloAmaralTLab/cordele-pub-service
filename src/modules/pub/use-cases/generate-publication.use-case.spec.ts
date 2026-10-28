@@ -1,10 +1,10 @@
 /**
- * Unit spec for GeneratePublicationUseCase (PUB-003 + INT-PUB-006).
+ * Unit spec for GeneratePublicationUseCase.
  *
  * All outbound ports mocked with jest.fn() — no Nest DI, no real infra.
  * Covers: pre-flight (409 manuscript-missing, 422 metadata-incomplete),
- * idempotent in-flight trigger (D-R), the non-blocking job dispatch, and
- * INT-PUB-006 (EmpresaContext isolation: two jobs for different empresas
+ * idempotent in-flight trigger, the non-blocking job dispatch, and
+ * EmpresaContext isolation ( two jobs for different empresas
  * must not share AsyncLocalStorage context).
  */
 
@@ -76,7 +76,7 @@ describe('GeneratePublicationUseCase', () => {
     expect(repository.findInFlight).not.toHaveBeenCalled();
   });
 
-  it('returns the in-flight publicacao without creating a second one (D-R)', async () => {
+  it('returns the in-flight publicacao without creating a second one (idempotent)', async () => {
     const inFlight = PublicacaoEntity.iniciar({
       id: 'existing-id',
       projetoId: PROJETO_ID,
@@ -162,8 +162,8 @@ describe('GeneratePublicationUseCase', () => {
     expect(buildJob.run).toHaveBeenCalledWith(
       expect.objectContaining({ projetoId: PROJETO_ID, empresaId: 'empresa-aetos' }),
     );
-    // INT-PUB-006: runAs must be called with the empresa captured before dispatch.
-    // INT-PUB-002: third arg is the bearerToken forwarded for ALS storage (empty when none supplied).
+    // runAs must be called with the empresa captured before dispatch.
+    // third arg is the bearerToken forwarded for ALS storage (empty when none supplied).
     expect(empresaContextRunner.runAs).toHaveBeenCalledWith(
       'empresa-aetos',
       expect.any(Function),
@@ -171,7 +171,7 @@ describe('GeneratePublicationUseCase', () => {
     );
   });
 
-  it('INT-PUB-006: two concurrent jobs for different empresas do not share EmpresaContext', async () => {
+  it('two concurrent jobs for different empresas do not share EmpresaContext', async () => {
     // Arrange two separate use-case instances (simulating concurrent requests)
     const repoA: jest.Mocked<PublicacaoRepositoryPort> = {
       findInFlight: jest.fn().mockResolvedValue(null),

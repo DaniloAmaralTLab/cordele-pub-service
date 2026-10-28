@@ -1,8 +1,8 @@
 /**
- * Unit spec for GetPublicationStatsUseCase (PUB-006).
+ * Unit spec for GetPublicationStatsUseCase.
  *
- * Covers the KPI aggregation (D-O), including the `emAndamento=1` scenario
- * required by the P2 acceptance criteria.
+ * Covers the KPI aggregation, including the `emAndamento=1` scenario
+ * (one build still in progress).
  */
 
 import { ForbiddenException } from '@nestjs/common';
@@ -85,7 +85,7 @@ describe('GetPublicationStatsUseCase', () => {
     });
   });
 
-  it('computes emAndamento=1 with exactly one non-terminal publicacao (P2 acceptance criterion)', async () => {
+  it('computes emAndamento=1 with exactly one non-terminal publicacao', async () => {
     repository.listByProjeto.mockResolvedValue([gerando('pub-1')]);
 
     const result = await useCase.execute({ projetoId: PROJETO_ID }, makeUser());
@@ -97,7 +97,7 @@ describe('GetPublicationStatsUseCase', () => {
   });
 
   it('aggregates a mixed history (newest first) into the correct KPI counts', async () => {
-    // Newest first, as listByProjeto contracts to return (api-contract §4.3).
+    // Newest first, as listByProjeto contracts to return.
     repository.listByProjeto.mockResolvedValue([
       publicado('pub-3', EpubcheckStatus.AVISOS),
       comErros('pub-2'),

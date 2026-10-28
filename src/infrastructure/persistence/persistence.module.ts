@@ -11,20 +11,20 @@ import { PrismaValidationMessageRepository } from './prisma-validation-message.r
  *
  * Decorated with `@Global()` so `PubModule` and any future feature module can
  * inject the repository tokens without importing this module directly
- * (RULE-04: modules/ must not import infrastructure/ directly;
- *  RULE-05: infrastructure/ must not import modules/).
+ * (modules/ must not import infrastructure/ directly;
+ *  infrastructure/ must not import modules/).
  *
  * This module is imported once in `AppModule`. Feature modules receive the
  * tokens through the global scope — they never reference `PersistenceModule`
  * or any infrastructure class directly.
  *
- * Token resolution (P3 — PUB-008):
+ * Token resolution:
  *   `PublicacaoRepositoryPort` (Symbol) → `PrismaPublicacaoRepository`
  *
- * Token resolution (PUB-016):
+ * Token resolution:
  *   `ValidationMessageRepositoryPort` (Symbol) → `PrismaValidationMessageRepository`
  *
- * P4 (PUB-010/011): `EpubValidationPort` and `FileStoragePort` adapters will
+ * `EpubValidationPort` and `FileStoragePort` adapters will
  * be added here.
  */
 @Global()

@@ -9,7 +9,7 @@ import {
 } from './jwt-auth.guard';
 
 /**
- * Unit tests for `JwtAuthGuard` (PUB-013).
+ * Unit tests for `JwtAuthGuard`.
  *
  * The guard extends `AuthGuard('jwt')` (Passport) and adds:
  *   - `@Public()` short-circuit (returns true without JWT validation).

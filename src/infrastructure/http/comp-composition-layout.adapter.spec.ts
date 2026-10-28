@@ -4,9 +4,9 @@ import { EmpresaContextService } from '../auth/empresa-context.service';
 import { CompCompositionLayoutAdapter } from './comp-composition-layout.adapter';
 
 /**
- * Unit tests for `CompCompositionLayoutAdapter` (INT-PUB-002, P10).
+ * Unit tests for `CompCompositionLayoutAdapter`.
  *
- * fetch is mocked via `jest.spyOn(globalThis, 'fetch')` — no HTTP call is made.
+ * Fetch is mocked via `jest.spyOn(globalThis, 'fetch')` — no HTTP call is made.
  */
 describe('CompCompositionLayoutAdapter', () => {
   const PROJETO_ID = 'proj-abc-456';
@@ -174,8 +174,8 @@ describe('CompCompositionLayoutAdapter', () => {
     });
   });
 
-  describe('Cenário 5: SD-01 — sem env var, adapter falha na construcao', () => {
-    it('throws during construction when COMP_SERVICE_URL env var is absent (SD-01 guard)', () => {
+  describe('Cenário 5: sem env var, adapter falha na construcao', () => {
+    it('throws during construction when COMP_SERVICE_URL env var is absent', () => {
       // Validates that the adapter fails loudly at boot time instead of silently
       // falling back to a wrong default. This test would break if getOrThrow()
       // were reverted to config.get() ?? 'default'.

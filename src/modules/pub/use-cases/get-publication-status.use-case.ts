@@ -11,9 +11,9 @@ export interface GetPublicationStatusInput {
 }
 
 /**
- * GetPublicationStatusUseCase — poll build status (api-contract §4.2).
+ * GetPublicationStatusUseCase — poll build status.
  *
- * RULE-07: requires the empresa context before touching the repository.
+ * Requires the empresa context before touching the repository.
  */
 @Injectable()
 export class GetPublicationStatusUseCase {

@@ -7,7 +7,7 @@ import { Injectable } from '@nestjs/common';
  * Populated by `CorrelationInterceptor` at the start of each HTTP request and
  * made available to any provider running inside the same async context.
  *
- * RULE-01/02 compliant: no Prisma, no NestJS decorators in domain/ — this
+ * No Prisma, no NestJS decorators in domain/ — this
  * service lives in modules/ and uses only NestJS DI and Node.js built-ins.
  */
 export interface CorrelationContext {

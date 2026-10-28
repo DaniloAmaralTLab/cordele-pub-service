@@ -3,11 +3,11 @@ import { Injectable } from '@nestjs/common';
 import type { ManuscriptContentPort, ManuscriptContentTree } from '../../../modules/pub/ports/manuscript-content.port';
 
 /**
- * In-process stub for ManuscriptContentPort (PUB-012, P4).
+ * In-process stub for ManuscriptContentPort.
  *
  * Returns a deterministic fixture tree so `PublicationBuildJob` and BDD tests
- * can run without a real IMP service. Replace with the real adapter in P6
- * (INT-PUB-001) by swapping the provider in AppModule.
+ * can run without a real IMP service. Replace with the real adapter
+ * by swapping the provider in AppModule.
  *
  * Controlled by env vars (not by constructor args) so the same module can
  * cover both positive and negative pre-flight test paths without

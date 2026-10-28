@@ -3,10 +3,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { EpubcheckStatus } from '../../../domain/pub/epubcheck-status.enum';
 
 /**
- * One publication history row (api-contract.md §6.2 — T08).
+ * One publication history row.
  *
  * Identical field set to what PROJ's `PublicationHistoryPort` returns
- * (proj api-contract §6.3 / integration-contracts §2.3); this contract is
+ *; this contract is
  * the authoritative source of the shape.
  */
 export class PublicacaoHistoryItemDto {

@@ -176,7 +176,7 @@ describe('EpubBuilder', () => {
       expect(xhtml).toContain('Um parágrafo de teste.');
     });
 
-    it('unparsed blocks are included in chapter XHTML (D-H: never discarded)', async () => {
+    it('unparsed blocks are included in chapter XHTML (never discarded)', async () => {
       const treeWithUnparsed: EpubContentTree = {
         manuscritoId: 'ms-1',
         estrutura: [
@@ -271,7 +271,7 @@ describe('EpubBuilder', () => {
     });
   });
 
-  describe('ADR-004: KPIs de resumo (totalCapitulos, totalImagens)', () => {
+  describe('KPIs de resumo (totalCapitulos, totalImagens)', () => {
     it('retorna totalCapitulos igual ao número de capítulos no manuscrito', async () => {
       const treeWith2Chapters: EpubContentTree = {
         manuscritoId: 'ms-1',

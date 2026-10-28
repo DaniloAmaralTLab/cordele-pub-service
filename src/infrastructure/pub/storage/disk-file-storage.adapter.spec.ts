@@ -43,7 +43,7 @@ describe('DiskFileStorageAdapter', () => {
       expect(result.url).toContain(encodeURIComponent(key));
     });
 
-    it('ADR-004: retorna bytesWritten igual ao tamanho do Buffer escrito', async () => {
+    it('retorna bytesWritten igual ao tamanho do Buffer escrito', async () => {
       const adapter = buildAdapter(storageRoot);
       const key = `emp_aetos/publicacoes/${randomUUID()}/output.epub`;
       const content = Buffer.from('epub-content-com-tamanho-conhecido');
@@ -51,7 +51,7 @@ describe('DiskFileStorageAdapter', () => {
       expect(result.bytesWritten).toBe(content.byteLength);
     });
 
-    it('ADR-004: retorna bytesWritten para Readable stream', async () => {
+    it('retorna bytesWritten para Readable stream', async () => {
       const { Readable } = await import('node:stream');
       const adapter = buildAdapter(storageRoot);
       const key = `emp_aetos/publicacoes/${randomUUID()}/output.epub`;
@@ -73,7 +73,7 @@ describe('DiskFileStorageAdapter', () => {
       await expect(access(join(storageRoot, key))).rejects.toThrow();
     });
 
-    it('does NOT throw for a key that does not exist (idempotent — D-Q purge path)', async () => {
+    it('does NOT throw for a key that does not exist (idempotent purge path)', async () => {
       const adapter = buildAdapter(storageRoot);
       const missingKey = `emp_aetos/publicacoes/${randomUUID()}/nonexistent.epub`;
       await expect(adapter.delete(missingKey)).resolves.not.toThrow();

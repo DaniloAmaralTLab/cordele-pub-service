@@ -4,9 +4,9 @@ import { EmpresaContextService } from '../auth/empresa-context.service';
 import { CompCompositionMetadataAdapter } from './comp-composition-metadata.adapter';
 
 /**
- * Unit tests for `CompCompositionMetadataAdapter` (INT-PUB-002, P10).
+ * Unit tests for `CompCompositionMetadataAdapter`.
  *
- * fetch is mocked via `jest.spyOn(globalThis, 'fetch')` — no HTTP call is made.
+ * Fetch is mocked via `jest.spyOn(globalThis, 'fetch')` — no HTTP call is made.
  * All scenarios exercise the mapping, materialized-guard, and error-absorption
  * logic without a real comp-service.
  */
@@ -171,8 +171,8 @@ describe('CompCompositionMetadataAdapter', () => {
     });
   });
 
-  describe('Cenário 6: SD-01 — sem env var, adapter falha na construcao', () => {
-    it('throws during construction when COMP_SERVICE_URL env var is absent (SD-01 guard)', () => {
+  describe('Cenário 6: sem env var, adapter falha na construcao', () => {
+    it('throws during construction when COMP_SERVICE_URL env var is absent', () => {
       // Validates that the adapter fails loudly at boot time instead of silently
       // falling back to a wrong default. This test would break if getOrThrow()
       // were reverted to config.get() ?? 'default'.

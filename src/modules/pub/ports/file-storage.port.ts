@@ -6,22 +6,21 @@ export interface SignedUrl {
 }
 
 /**
- * Outbound port: the `.epub` artifact + image reads
- * (integration-contracts.md §3.2, ADR-003).
+ * Outbound port: the `.epub` artifact + image reads.
  *
  * Key scheme: `emp_<slug>/publicacoes/<publicacaoId>/output.epub`, always
  * tenant-scoped from `EmpresaContext` — never a caller-supplied path. A
- * `publicado` row must always have an artifact (data-model.md
- * `chk_publicacao_artefato`): if storage fails after a valid build, the
+ * `publicado` row must always have an artifact
+ * (`chk_publicacao_artefato`): if storage fails after a valid build, the
  * caller must record `com_erros` instead.
  *
- * Adapter (`DiskFileStorageAdapter`, PUB-011) binds in P4. P2 use cases are
+ * Adapter: `DiskFileStorageAdapter`. Use cases are
  * tested against Jest mocks of this interface.
  */
 export interface FileStoragePort {
   /**
    * Stores `content` under `key`. Returns the internal URL and the number of
-   * bytes written to storage (ADR-004: `bytesWritten` feeds `tamanho_bytes` on
+   * bytes written to storage (`bytesWritten` feeds `tamanho_bytes` on
    * the `publicacao` row via `PublicationBuildJob`).
    */
   put(key: string, content: Buffer | Readable, contentType: string): Promise<{ url: string; bytesWritten: number }>;

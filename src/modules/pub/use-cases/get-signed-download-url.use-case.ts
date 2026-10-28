@@ -17,17 +17,17 @@ export interface SignedDownloadUrlResult {
   readonly expiresAt: string;
 }
 
-/** Short TTL for the minted download URL (D-F/D-R). */
+/** Short TTL for the minted download URL. */
 const DOWNLOAD_URL_TTL_SECONDS = 300;
 
 /**
  * GetSignedDownloadUrlUseCase — mint a short-TTL signed download URL
- * (api-contract §4.4, T08, D-F/D-R). Also backs PROJ's
- * `PublicationHistoryPort.signedDownloadUrl` (exported in P6).
+ *. Also backs PROJ's
+ * `PublicationHistoryPort.signedDownloadUrl`.
  *
  * PUB never streams the `.epub` bytes through the app — only a signed URL.
  *
- * RULE-07: requires the empresa context before touching the repository.
+ * Requires the empresa context before touching the repository.
  */
 @Injectable()
 export class GetSignedDownloadUrlUseCase {

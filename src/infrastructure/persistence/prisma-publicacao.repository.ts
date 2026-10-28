@@ -7,19 +7,19 @@ import { PrismaEmpresaService } from './prisma-empresa.service';
 import { PublicacaoMapper } from './publicacao.mapper';
 
 /**
- * Prisma-backed adapter for `PublicacaoRepositoryPort` (PUB-008, D-545).
+ * Prisma-backed adapter for `PublicacaoRepositoryPort`.
  *
- * Tenant isolation follows ADR-003 (D-619): each query runs through a
+ * Tenant isolation is schema-per-empresa: each query runs through a
  * `PrismaClient` whose `datasourceUrl` targets `emp_<slug>` — the empresa schema
  * resolved from `EmpresaContextService` (AsyncLocalStorage). `SET search_path` at
  * query level is silently ignored by the Prisma Client and was NEVER a valid
  * isolation mechanism here; `PrismaEmpresaService` is the correct adapter.
  *
- * RULE-01/02: zero `@nestjs/*` decorators on domain types, zero `@prisma/client`
+ * Zero `@nestjs/*` decorators on domain types, zero `@prisma/client`
  * imports in domain/. This file lives in infrastructure/ — it is the bridge.
- * RULE-05: infrastructure/ does not import modules/ (only domain/ ports, which
+ * infrastructure/ does not import modules/ (only domain/ ports, which
  * are interface definitions, are imported).
- * RULE-07: all data access is scoped by empresa via `PrismaEmpresaService`.
+ * all data access is scoped by empresa via `PrismaEmpresaService`.
  */
 @Injectable()
 export class PrismaPublicacaoRepository implements PublicacaoRepositoryPort {
@@ -30,7 +30,7 @@ export class PrismaPublicacaoRepository implements PublicacaoRepositoryPort {
   /**
    * Returns the project's in-flight (`gerando`|`validando`) Publicacao, if
    * any. The partial unique index `uq_publicacao_projeto_inflight` guarantees
-   * at most one row matches (D-R), so `findFirst` is equivalent to `findUnique`
+   * at most one row matches, so `findFirst` is equivalent to `findUnique`
    * here.
    */
   async findInFlight(projetoId: string): Promise<PublicacaoEntity | null> {
@@ -48,10 +48,10 @@ export class PrismaPublicacaoRepository implements PublicacaoRepositoryPort {
   /**
    * Returns the next monotonic `sequencia` for the project.
    *
-   * Computed application-side as MAX(sequencia) + 1 (data-model.md §2.1).
+   * Computed application-side as MAX(sequencia) + 1.
    * The DB-level `uq_publicacao_projeto_seq` UNIQUE constraint is the final
    * safety net if two concurrent calls race; the `uq_publicacao_projeto_inflight`
-   * partial index already prevents concurrent in-flight builds (D-R), making
+   * partial index already prevents concurrent in-flight builds, making
    * that race practically impossible in the normal path.
    */
   async nextSequencia(projetoId: string): Promise<number> {
@@ -70,7 +70,7 @@ export class PrismaPublicacaoRepository implements PublicacaoRepositoryPort {
    * the build-machine states).
    *
    * Terminal rows (`publicado`|`com_erros`) are never passed to `save` again
-   * (data-model.md §2.1, invariant); the upsert is therefore safe in practice.
+   *; the upsert is therefore safe in practice.
    */
   async save(publicacao: PublicacaoEntity): Promise<PublicacaoEntity> {
     return this.empresaService.withCurrentTenant(async (client) => {
@@ -100,7 +100,7 @@ export class PrismaPublicacaoRepository implements PublicacaoRepositoryPort {
   }
 
   /**
-   * Returns the full history for a project, newest first (api-contract §4.3).
+   * Returns the full history for a project, newest first.
    *
    * Ordered by `sequencia DESC` so the most recent attempt is first.
    */
@@ -116,7 +116,7 @@ export class PrismaPublicacaoRepository implements PublicacaoRepositoryPort {
 
   /**
    * Returns the latest (highest `sequencia`) publication for each projetoId
-   * in a SINGLE batched query (integration-contracts §1.1, no N+1).
+   * in a SINGLE batched query (no N+1).
    *
    * Algorithm:
    *  1. Issue ONE `findMany` filtered by `projetoId IN (...)`, ordered DESC by
@@ -154,7 +154,7 @@ export class PrismaPublicacaoRepository implements PublicacaoRepositoryPort {
    *
    * Tenant isolation is provided by `PrismaEmpresaService`: the PrismaClient
    * targets `emp_<slug>` (resolved from `EmpresaContextService`), so the query
-   * is already scoped to the active tenant schema (ADR-003, D-619).
+   * is already scoped to the active tenant schema.
    * Returns null when the id does not exist.
    */
   async findByPublicacaoId(publicacaoId: string): Promise<PublicacaoEntity | null> {
@@ -170,7 +170,7 @@ export class PrismaPublicacaoRepository implements PublicacaoRepositoryPort {
    * Deletes all publication rows for a project (idempotent — 0 deleted rows
    * is not an error). Prisma cascades `validation_message` rows via FK.
    *
-   * Called by PublicationErasurePort.erase() (PUB-015) before file artifacts
+   * Called by PublicationErasurePort.erase() before file artifacts
    * are deleted from storage.
    */
   async deleteAllByProjeto(projetoId: string): Promise<void> {
@@ -182,11 +182,11 @@ export class PrismaPublicacaoRepository implements PublicacaoRepositoryPort {
 
   /**
    * Returns all publications stuck in a non-terminal state for longer than
-   * `olderThanMinutes` minutes (PUB-020).
+   * `olderThanMinutes` minutes.
    *
    * Operational diagnostic method — used by the reconciliation script only;
    * never exposed via REST. Tenant isolation is provided by `PrismaEmpresaService`
-   * (per-schema PrismaClient, ADR-003, D-619): the query targets only the active
+   * (per-schema PrismaClient): the query targets only the active
    * tenant schema, consistent with all other repository methods.
    */
   async findStaleInFlight(olderThanMinutes: number): Promise<PublicacaoEntity[]> {

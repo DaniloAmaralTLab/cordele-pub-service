@@ -10,7 +10,7 @@ import { PublicacaoStatus } from '../../domain/pub/publicacao-status.enum';
  * This is the ONLY file allowed to know both the Prisma row shape and the
  * domain entity shape. Explicit field mapping (no spreads) means a schema
  * rename surfaces here as a compile error rather than a silent `undefined`
- * deep in domain logic (RULE-01/02 — domain/ never sees @prisma/client).
+ * deep in domain logic (domain/ never sees @prisma/client).
  */
 export class PublicacaoMapper {
   /**
@@ -33,7 +33,7 @@ export class PublicacaoMapper {
       totalAvisos: model.totalAvisos,
       iniciadaEm: model.iniciadaEm,
       concluidaEm: model.concluidaEm ?? undefined,
-      // ADR-004: campos de KPI de ePub (nullable; presentes apenas em status=publicado)
+      // campos de KPI de ePub (nullable; presentes apenas em status=publicado)
       tamanhoBytes: model.tamanhoBytes ?? undefined,
       totalCapitulos: model.totalCapitulos ?? undefined,
       totalImagens: model.totalImagens ?? undefined,
@@ -64,7 +64,7 @@ export class PublicacaoMapper {
       totalAvisos: entity.totalAvisos,
       iniciadaEm: entity.iniciadaEm,
       concluidaEm: entity.concluidaEm ?? null,
-      // ADR-004: KPIs de resumo (null até status=publicado)
+      // KPIs de resumo (null até status=publicado)
       tamanhoBytes: entity.tamanhoBytes ?? null,
       totalCapitulos: entity.totalCapitulos ?? null,
       totalImagens: entity.totalImagens ?? null,
@@ -86,7 +86,7 @@ export class PublicacaoMapper {
       totalErros: entity.totalErros,
       totalAvisos: entity.totalAvisos,
       concluidaEm: entity.concluidaEm ?? null,
-      // ADR-004: KPIs de resumo (persistidos na transição para publicado)
+      // KPIs de resumo (persistidos na transição para publicado)
       tamanhoBytes: entity.tamanhoBytes ?? null,
       totalCapitulos: entity.totalCapitulos ?? null,
       totalImagens: entity.totalImagens ?? null,

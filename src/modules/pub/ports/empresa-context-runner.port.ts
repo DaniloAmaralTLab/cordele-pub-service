@@ -1,10 +1,10 @@
 /**
  * EmpresaContextRunnerPort — port para restaurar o contexto de empresa dentro
- * de jobs assíncronos (INT-PUB-006).
+ * de jobs assíncronos.
  *
  * Abstrai `EmpresaContextService.runAs()` (infrastructure/auth) de forma que
  * `GeneratePublicationUseCase` (modules/) possa utilizá-lo sem importar
- * diretamente de `infrastructure/` (RULE-04).
+ * diretamente de `infrastructure/`.
  *
  * A implementação concreta (`EmpresaContextService`) é injetada via
  * `EMPRESA_CONTEXT_RUNNER_PORT` no `AppModule` usando `useExisting`.
@@ -20,7 +20,7 @@
  *   );
  * ```
  *
- * Risco mitigado (INT-PUB-006): `AsyncLocalStorage` perde contexto ao sair da
+ * Risco mitigado: `AsyncLocalStorage` perde contexto ao sair da
  * callstack síncrona. A captura ANTES do `Promise.resolve()` + o `runAs` dentro
  * do callback garante que todo código interno ao job (inclusive sub-promises)
  * enxerga o contexto da empresa correta.
@@ -29,7 +29,6 @@
  * compartilham `EmpresaContext` porque cada um cria uma entrada separada no
  * `AsyncLocalStorage` via `runAs`.
  *
- * @see docs/architecture/shared/multi-empresa.md
  * @see pub.tokens.ts (EMPRESA_CONTEXT_RUNNER_PORT)
  */
 export interface EmpresaContextRunnerPort {
@@ -38,7 +37,7 @@ export interface EmpresaContextRunnerPort {
    *
    * Retorna o valor produzido por `fn` (pode ser uma Promise).
    *
-   * `bearerToken` (INT-PUB-002): quando informado, é armazenado no ALS para
+   * `bearerToken`: quando informado, é armazenado no ALS para
    * que adapters HTTP de saída (CompCompositionMetadataAdapter, etc.) possam
    * recuperá-lo via `EmpresaContextService.getBearerToken()` sem mudança de
    * assinatura das portas. Parâmetro opcional — chamadas existentes sem o

@@ -2,7 +2,7 @@
  * PublicationFailedEvent — domain event emitted after a Publicacao reaches
  * the `com_erros` terminal state and its failure outcome is durably persisted.
  *
- * RULE-01/RULE-02: plain TypeScript class — no @nestjs/* decorators,
+ * Plain TypeScript class — no @nestjs/* decorators,
  * no @prisma/client imports. All fields are value-object primitives.
  *
  * Carries `empresaId` so downstream handlers can reconstruct the

@@ -12,17 +12,17 @@ import { Public } from '../auth/jwt-auth.guard';
 /**
  * HealthController — `/health` readiness and `/health/live` liveness probes.
  *
- * P7 (PUB-018): the readiness probe now runs the three PUB-specific checks
+ * The readiness probe now runs the three PUB-specific checks
  * from `PubHealthIndicator`:
  *  - `pub_database`  — Prisma `SELECT 1`
  *  - `pub_storage`   — write probe to `PUB_STORAGE_ROOT`
  *  - `pub_epubcheck` — JAR existence + `java -version`
  *
  * If `EPUBCHECK_JAR_PATH` is absent the overall readiness status is `error`
- * and `pub_epubcheck.status` is `"down"` — satisfying ADR-003 (never publish
- * unvalidated ePub) and SPEC-07.
+ * and `pub_epubcheck.status` is `"down"` — we never publish an
+ * unvalidated ePub.
  *
- * RULE-05: infrastructure/ does not import modules/. ✓
+ * infrastructure/ does not import modules/. ✓
  *   `PubHealthIndicator` lives in `infrastructure/pub/health/`.
  */
 @ApiTags('ops')

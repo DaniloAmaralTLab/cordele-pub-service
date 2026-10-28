@@ -5,7 +5,7 @@ import { buildOpf, type ManifestItem, type SpineItem } from './epub-opf-builder'
 import { buildChapterXhtml, buildNavXhtml, type ChapterNode, type ContentBlock, type ImageBlock } from './epub-xhtml-builder';
 
 /**
- * EpubBuilder — domain service (PUB-009, P4).
+ * EpubBuilder — domain service.
  *
  * Converts a content tree (from IMP), editorial metadata (from COMP) and a
  * layout configuration (from COMP, optional) into a well-formed OCF/ePub 3
@@ -21,14 +21,14 @@ import { buildChapterXhtml, buildNavXhtml, type ChapterNode, type ContentBlock, 
  *   (no volatile metadata); image content comes from the caller's imageLoader,
  *   not from the file system directly.
  *
- * ### Unparsed segments (D-H)
+ * ### Unparsed segments
  * `unparsed` blocks are preserved in the XHTML via `<div class="unparsed">`;
  * they are never silently discarded.
  *
- * ### Missing data defaults (SPEC-03 §2, COMP §7.2)
+ * ### Missing data defaults
  * - `layout = null` → CSS uses documented defaults from `epub-css-builder.ts`.
  * - Missing images (imageLoader returns null) → `<img>` tag kept, src points
- *   to the expected path even if the image is absent from the ZIP (build proceeds).
+ *   to the expected path even if the image is absent from the ZIP.
  */
 
 // ─── Locally-scoped input types ─────────────────────────────────────────────
@@ -56,8 +56,7 @@ export type EpubLayout = EpubLayoutForCss;
 
 /**
  * Async function that resolves a storage key to image bytes.
- * Returns `null` when the image is unavailable — the build continues (the
- * <img> element is still included; the image simply won't be in the OCF package).
+ * Returns `null` when the image is unavailable.
  */
 export type EpubImageLoader = (storageKey: string) => Promise<Buffer | null>;
 
@@ -204,7 +203,7 @@ export class EpubBuilder {
   /**
    * Assembles the complete ePub 3 package.
    *
-   * ADR-004: retorna um objeto com `epubBytes`, `totalCapitulos` e `totalImagens`
+   * Retorna um objeto com `epubBytes`, `totalCapitulos` e `totalImagens`
    * em vez de apenas o Buffer, para que o `PublicationBuildJob` possa persistir
    * os KPIs de resumo sem re-inspecionar o arquivo gerado.
    *
@@ -230,7 +229,7 @@ export class EpubBuilder {
       .map(toChapterNode)
       .filter((c): c is ChapterNode => c !== null);
 
-    // ADR-004: contar capítulos do manuscrito original (antes de inserir o fallback)
+    // contar capítulos do manuscrito original (antes de inserir o fallback)
     const totalCapitulosContados = chapters.length;
 
     // Ensure at least one chapter exists (ePub must have content)
@@ -255,14 +254,14 @@ export class EpubBuilder {
     manifestItems.push({ id: 'css-style', href: 'css/style.css', mediaType: 'text/css' });
 
     // ── Load images ────────────────────────────────────────────────────────
-    // Collect all image storage keys referenced in all chapters (ADR-004: totalImagens)
+    // Collect all image storage keys referenced in all chapters (for totalImagens)
     const imageKeys = new Set<string>();
     for (const chapter of chapters) {
       for (const img of collectImages(chapter.blocks)) {
         imageKeys.add(img.storageKey);
       }
     }
-    // ADR-004: totalImagens = number of distinct image references in the manuscript
+    // totalImagens = number of distinct image references in the manuscript
     const totalImagensContadas = imageKeys.size;
 
     for (const key of imageKeys) {
@@ -333,7 +332,7 @@ export class EpubBuilder {
 
     const epubBytes = buildOcfZip(allEntries);
 
-    // ADR-004: retornar KPIs de resumo junto com o buffer do ePub
+    // retornar KPIs de resumo junto com o buffer do ePub
     return {
       epubBytes,
       totalCapitulos: totalCapitulosContados,

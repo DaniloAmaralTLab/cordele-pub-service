@@ -1,5 +1,5 @@
 /**
- * epubcheck verdict surfaced to PROJ/FE (ADR-003-epubcheck-validation-port, D-Q).
+ * Epubcheck verdict surfaced to PROJ/FE.
  *
  * `pendente` until the build reaches a terminal state. Warnings do not block
  * publication: `avisos` still yields `PublicacaoStatus.PUBLICADO`.

@@ -1,20 +1,20 @@
 /**
- * Converts the honoured layout parameters (COMP api-contract §7.3) to a
- * CSS stylesheet string embedded in the ePub (SPEC-03 §2).
+ * Converts the honoured layout parameters to a
+ * CSS stylesheet string embedded in the ePub.
  *
  * Domain-pure: no @nestjs/* or @prisma/* imports.
  *
- * Honoured properties (exactly the set defined by COMP §7.3):
+ * Honoured properties (exactly the set COMP supports):
  *   - fonteCorpoFamilia, fonteCorpoTamanho, espacamentoLinha, margemLateral
  *   - h1/h2/h3Tamanho
  *   - image alignment per override (applied inline in epub-xhtml-builder.ts)
  *
- * Note: `em-branco` override type is NEVER rendered in CSS (D-H: "sem
+ * Note: `em-branco` override type is NEVER rendered in CSS ("sem
  * em-branco no CSS") — blank-page overrides exist only as positional markers
  * in the spine.
  */
 
-/** Subset of LayoutRead consumed by the CSS builder — mirrors COMP §7.3. */
+/** Subset of LayoutRead consumed by the CSS builder. */
 export interface EpubLayoutForCss {
   readonly fonteCorpoFamilia: 'serif' | 'sans-serif';
   readonly fonteCorpoTamanho: number;
@@ -25,7 +25,7 @@ export interface EpubLayoutForCss {
   readonly h3Tamanho: number;
 }
 
-/** Default layout constants (COMP api-contract §7.2). */
+/** Default layout constants. */
 const LAYOUT_DEFAULTS: EpubLayoutForCss = {
   fonteCorpoFamilia: 'serif',
   fonteCorpoTamanho: 12,
@@ -109,7 +109,7 @@ img.align-junto-direita {
   margin-left: auto;
 }
 
-/* Preserve unparsed segments as preformatted blocks (D-H: unparsed never discarded). */
+/* Preserve unparsed segments as preformatted blocks (unparsed content is never discarded). */
 div.unparsed {
   font-family: monospace;
   font-size: 0.85em;

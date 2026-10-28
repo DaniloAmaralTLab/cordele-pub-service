@@ -4,7 +4,7 @@ import { EmpresaContextMiddleware } from './empresa-context.middleware';
 import { EmpresaContextService } from './empresa-context.service';
 
 /**
- * Unit tests for `EmpresaContextMiddleware` (PUB-013).
+ * Unit tests for `EmpresaContextMiddleware`.
  *
  * Verifies that the middleware:
  *   - decodes a valid Bearer JWT and runs the `AsyncLocalStorage` context

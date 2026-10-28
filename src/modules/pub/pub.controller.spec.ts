@@ -1,5 +1,5 @@
 /**
- * Unit spec for PubController (PUB-001).
+ * Unit spec for PubController.
  *
  * Covers all seven route handlers:
  *   4.1 POST  projetos/:projetoId/publicacoes           → trigger()
@@ -14,7 +14,7 @@
  * through @nestjs/testing Test.createTestingModule — the standard pattern for
  * NestJS controller unit tests.
  *
- * RULE-04 compliance is structural: the spec lives in modules/ and does NOT
+ * The layer boundary is structural: the spec lives in modules/ and does NOT
  * import anything from infrastructure/.
  */
 
@@ -136,7 +136,7 @@ describe('PubController', () => {
   // -------------------------------------------------------------------------
 
   describe('trigger()', () => {
-    it('returns 202 Accepted and Location header when a new build is enqueued (D-N)', async () => {
+    it('returns 202 Accepted and Location header when a new build is enqueued', async () => {
       const publicacao = makeGerando();
       generateUseCase.execute.mockResolvedValue({ publicacao, isNew: true });
       const res = makeRes();
@@ -153,7 +153,7 @@ describe('PubController', () => {
       expect(dto.arquivoDisponivel).toBe(false);
     });
 
-    it('returns 200 OK when an in-flight build already exists (D-R idempotent)', async () => {
+    it('returns 200 OK when an in-flight build already exists (idempotent)', async () => {
       const publicacao = makeGerando();
       generateUseCase.execute.mockResolvedValue({ publicacao, isNew: false });
       const res = makeRes();
@@ -197,7 +197,7 @@ describe('PubController', () => {
   // -------------------------------------------------------------------------
 
   describe('status()', () => {
-    it('adds Retry-After header and returns the DTO when the build is non-terminal (D-P)', async () => {
+    it('adds Retry-After header and returns the DTO when the build is non-terminal', async () => {
       const publicacao = makeGerando();
       statusUseCase.execute.mockResolvedValue(publicacao);
       const res = makeRes();
@@ -241,7 +241,7 @@ describe('PubController', () => {
   // -------------------------------------------------------------------------
 
   describe('history()', () => {
-    it('returns an empty array when the project has no exports (T08)', async () => {
+    it('returns an empty array when the project has no exports', async () => {
       historyUseCase.execute.mockResolvedValue([]);
 
       const result = await controller.history(PROJETO_ID, makeUser());
@@ -274,7 +274,7 @@ describe('PubController', () => {
   // -------------------------------------------------------------------------
 
   describe('downloadUrl()', () => {
-    it('returns a DownloadUrlDto on success (D-F/D-R)', async () => {
+    it('returns a DownloadUrlDto on success', async () => {
       const signed = {
         publicacaoId: PUBLICACAO_ID,
         arquivoUrl: 'https://cdn.example.com/output.epub?token=abc',
@@ -298,7 +298,7 @@ describe('PubController', () => {
   // -------------------------------------------------------------------------
 
   describe('stats()', () => {
-    it('delegates to the use case and returns the stats DTO (D-O)', async () => {
+    it('delegates to the use case and returns the stats DTO', async () => {
       const statsResult = {
         projetoId: PROJETO_ID,
         total: 3,

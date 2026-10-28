@@ -8,7 +8,7 @@ import { HealthController } from './health.controller';
  * HealthModule — provides the `/health` (readiness) and `/health/live`
  * (liveness) endpoints for pub-service.
  *
- * P7 (PUB-018): imports `PubHealthModule` to add the three PUB readiness
+ * Imports `PubHealthModule` to add the three PUB readiness
  * checks (DB, storage, epubcheck) to the readiness endpoint.
  */
 @Module({

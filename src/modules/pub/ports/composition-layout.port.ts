@@ -1,4 +1,4 @@
-/** One honoured, non-stale image-alignment override (comp api-contract §6.3). */
+/** One honoured, non-stale image-alignment override. */
 export interface LayoutOverrideRead {
   readonly id: string;
   readonly referenciaNo: string;
@@ -7,7 +7,7 @@ export interface LayoutOverrideRead {
   readonly ordem: number;
 }
 
-/** Persisted `ConfiguracaoLayout` (comp api-contract §6.2), honoured non-stale overrides only. */
+/** Persisted `ConfiguracaoLayout`, honoured non-stale overrides only. */
 export interface LayoutRead {
   readonly projetoId: string;
   readonly fonteCorpoFamilia: 'serif' | 'sans-serif';
@@ -22,14 +22,12 @@ export interface LayoutRead {
 
 /**
  * Outbound port: layout configuration honoured by the ePub stylesheet, owned
- * by COMP's `GetConfiguracaoLayoutUseCase` (integration-contracts.md §2.3,
- * D-I).
+ * by COMP's `GetConfiguracaoLayoutUseCase`.
  *
  * `null` is not a failure: PUB assembles with COMP's documented defaults
- * (comp api-contract §7.2) — only metadata is required at export.
+ * — only metadata is required at export.
  *
- * Stub adapter binds in P4 (PUB-012); real adapter in P6 (INT-PUB-002). P2
- * use cases are tested against Jest mocks of this interface.
+ * Use cases are tested against Jest mocks of this interface.
  */
 export interface CompositionLayoutPort {
   get(projetoId: string): Promise<LayoutRead | null>;

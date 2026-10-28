@@ -103,7 +103,7 @@ describe('GetSignedDownloadUrlUseCase', () => {
     });
   });
 
-  it('mints a signed URL for an avisos publication too (warnings do not block download, D-Q)', async () => {
+  it('mints a signed URL for an avisos publication too (warnings do not block download)', async () => {
     repository.findById.mockResolvedValue(makePublicado(EpubcheckStatus.AVISOS));
     fileStoragePort.signUrl.mockResolvedValue({ url: 'https://storage/output.epub?sig=y', expiresAt: '2026-08-19T16:35:00Z' });
 

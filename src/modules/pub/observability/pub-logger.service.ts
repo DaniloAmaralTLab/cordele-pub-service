@@ -3,8 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CorrelationContextService } from './correlation-context.service';
 
 /**
- * PubLoggerService — structured JSON logger for the PUB bounded context
- * (PUB-017, P7, SPEC-07).
+ * PubLoggerService — structured JSON logger for the PUB bounded context.
  *
  * Wraps the NestJS `Logger` and enriches every log entry with:
  * - `correlationId` — from `CorrelationContextService` (AsyncLocalStorage)
@@ -12,7 +11,7 @@ import { CorrelationContextService } from './correlation-context.service';
  * - `publicacaoId`  — passed explicitly when known
  *
  * Designed to emit structured JSON lines that are machine-parseable by the
- * Cordelê observability stack (Elasticsearch / D-423).
+ * Cordelê observability stack (Elasticsearch).
  *
  * ### Usage (build job instrumentation)
  * ```ts
@@ -21,8 +20,8 @@ import { CorrelationContextService } from './correlation-context.service';
  * this.pubLogger.buildPhase('gerando', Date.now() - start, { publicacaoId, projetoId });
  * ```
  *
- * RULE-04: modules/ does not import infrastructure/. ✓
- * RULE-08: no console.log — uses NestJS Logger. ✓
+ * modules/ does not import infrastructure/. ✓
+ * no console.log — uses NestJS Logger. ✓
  */
 @Injectable()
 export class PubLoggerService {
@@ -106,7 +105,7 @@ export class PubLoggerService {
 // Supporting types
 // ──────────────────────────────────────────────────────────────────────────────
 
-/** Named phases of the publication build pipeline (api-contract §7.2). */
+/** Named phases of the publication build. */
 export type BuildPhase = 'assemble' | 'validating' | 'storing' | 'notifying';
 
 /** Outcome of a completed build phase. */

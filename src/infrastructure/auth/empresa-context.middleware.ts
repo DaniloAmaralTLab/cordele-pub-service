@@ -19,7 +19,6 @@ import { EmpresaContextService } from './empresa-context.service';
  * Rotas sem Bearer token (ex.: `/health`) recebem `next()` sem contexto; o
  * guard delas é `@Public()` e os repositórios nunca são atingidos.
  *
- * @see docs/architecture/shared/multi-empresa.md
  */
 @Injectable()
 export class EmpresaContextMiddleware implements NestMiddleware {
@@ -47,7 +46,7 @@ export class EmpresaContextMiddleware implements NestMiddleware {
           const empresaId = payload.empresa_id ?? '';
 
           if (userId && empresaId) {
-            // INT-PUB-002: store the raw bearer token in the ALS context so
+            // store the raw bearer token in the ALS context so
             // outbound HTTP adapters (CompCompositionMetadataAdapter, etc.) can
             // retrieve it via getBearerToken() without changing port signatures.
             this.empresaContextService.run({ userId, empresaId, bearerToken: token }, () => next());

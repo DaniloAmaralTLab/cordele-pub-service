@@ -16,16 +16,15 @@ export interface ListValidationMessagesInput {
 }
 
 /**
- * ListValidationMessagesUseCase — detailed validation-message list
- * (api-contract §4.6, PUB-016).
+ * ListValidationMessagesUseCase — detailed validation-message list.
  *
  * Cross-tenant guard: validates that `publicacaoId` belongs to
  * `projetoId` **and** the active empresa by calling
  * `PublicacaoRepositoryPort.findById` first — identical pattern used by
- * `GetPublicationStatusUseCase` (PUB-005). Returns 404 when the
+ * `GetPublicationStatusUseCase`. Returns 404 when the
  * combination does not exist, never revealing cross-tenant existence.
  *
- * RULE-07: requires the empresa context before touching any repository.
+ * Requires the empresa context before touching any repository.
  */
 @Injectable()
 export class ListValidationMessagesUseCase {

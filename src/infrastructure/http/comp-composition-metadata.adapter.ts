@@ -8,9 +8,9 @@ import type { CompositionMetadataPort, MetadadosRead } from '../../modules/pub/p
  * Raw shape of the COMP `GET /api/v1/comp/projetos/:projetoId/metadados` response.
  *
  * When `materialized === false`, the comp-service returns a synthesised default
- * (D-M / api-contract §4.1) — not a 404. PUB must treat this as "no data saved
+ * — not a 404. PUB must treat this as "no data saved
  * yet" and return `null` so the export pre-flight can reject with 422
- * (metadata-incomplete) as documented in api-contract §7.1.
+ * (metadata-incomplete).
  */
 interface CompMetadadosResponse {
   readonly projetoId: string;
@@ -27,7 +27,7 @@ interface CompMetadadosResponse {
 }
 
 /**
- * HTTP adapter for `CompositionMetadataPort` (INT-PUB-002, P10).
+ * HTTP adapter for `CompositionMetadataPort`.
  *
  * Calls the COMP service:
  *   GET /api/v1/comp/projetos/{projetoId}/metadados
@@ -37,10 +37,10 @@ interface CompMetadadosResponse {
  * Inside `PublicationBuildJob`, the token is present in the ALS because
  * `GeneratePublicationUseCase` propagates it via `runAs(..., bearerToken)`.
  *
- * RULE-05: infrastructure/ does not import modules/; only port interfaces
+ * infrastructure/ does not import modules/; only port interfaces
  *   (type-only) are imported.
- * RULE-06: outbound HTTP clients live only in `infrastructure/http/`.
- * RULE-08: no console.log — Nest Logger only.
+ * outbound HTTP clients live only in `infrastructure/http/`.
+ * no console.log — Nest Logger only.
  */
 @Injectable()
 export class CompCompositionMetadataAdapter implements CompositionMetadataPort {
@@ -98,7 +98,7 @@ export class CompCompositionMetadataAdapter implements CompositionMetadataPort {
     }
 
     // COMP returns materialized=false when no composition data has been saved yet.
-    // Treat as null so the export pre-flight rejects with 422 (api-contract §7.1).
+    // Treat as null so the export pre-flight rejects with 422.
     if (!body.materialized) {
       this.logger.debug(
         `COMP metadados for projeto ${projetoId} is not materialized — returning null`,

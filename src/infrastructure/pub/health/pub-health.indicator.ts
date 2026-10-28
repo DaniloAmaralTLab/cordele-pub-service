@@ -13,8 +13,7 @@ import { PrismaService } from '../../persistence/prisma.service';
 const execFileAsync = promisify(execFile);
 
 /**
- * PubHealthIndicator — readiness checks for the PUB bounded context
- * (PUB-018, P7, SPEC-07).
+ * PubHealthIndicator — readiness checks for the PUB bounded context.
  *
  * Exposes three independent checks consumed by `HealthController`:
  *
@@ -24,7 +23,7 @@ const execFileAsync = promisify(execFile);
  * | `pub_storage`  | Write probe to `PUB_STORAGE_ROOT` — disk accessible        |
  * | `pub_epubcheck`| JAR exists at `EPUBCHECK_JAR_PATH` + `java -version` OK   |
  *
- * ### Acceptance criteria (PUB-018)
+ * ### Acceptance criteria
  * - `EPUBCHECK_JAR_PATH` not set → `pub_epubcheck.status = "down"` with
  *   `reason: "EPUBCHECK_JAR_PATH not configured"`.
  * - DB unreachable → `pub_database.status = "down"`.
@@ -34,9 +33,9 @@ const execFileAsync = promisify(execFile);
  *
  * Placed in `infrastructure/` because it accesses `PrismaService` (another
  * infra component) and performs disk I/O and process spawning — all infra
- * concerns. RULE-05: infrastructure/ does not import modules/. ✓
+ * concerns. infrastructure/ does not import modules/. ✓
  *
- * RULE-08: no console.log — uses NestJS Logger. ✓
+ * No console.log — uses NestJS Logger. ✓
  */
 @Injectable()
 export class PubHealthIndicator extends HealthIndicator {

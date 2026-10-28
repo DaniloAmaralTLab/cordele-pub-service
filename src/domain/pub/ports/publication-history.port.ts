@@ -1,16 +1,16 @@
 /**
  * Inbound port: PublicationHistoryPort
  *
- * Exported by PUB (P6 — PUB-014) and injected by PROJ via DI token
+ * Exported by PUB and injected by PROJ via DI token
  * PUBLICATION_HISTORY_PORT (pub.tokens.ts). Provides a read-model over the
  * `Publicacao` aggregate for PROJ's library card list (latest) and the
  * publication history view (history), and mints short-TTL signed URLs for
  * downloading ePub artifacts.
  *
- * Field set is fixed by api-contract.md §6.2 and integration-contracts.md §1.1.
+ * Field set matches the history item in the pub-service API contract.
  *
- * RULE-01: zero @prisma/client imports.
- * RULE-02: zero @nestjs/* imports.
+ * Zero @prisma/client imports.
+ * zero @nestjs/* imports.
  * Real implementation: src/modules/pub/publication-history.service.ts
  * DI token: PUBLICATION_HISTORY_PORT (pub.tokens.ts)
  */
@@ -21,7 +21,7 @@ export interface LatestPublicationSummary {
   readonly epubcheckStatus: 'valido' | 'avisos' | 'erros_criticos' | 'pendente';
 }
 
-/** Full publication record for PROJ's history view (integration-contracts §1.1). */
+/** Full publication record for PROJ's history view. */
 export interface PublicationRecord {
   readonly publicacaoId: string;
   readonly projetoId: string;
@@ -40,7 +40,7 @@ export interface PublicationRecord {
   readonly criadoEm: string;
 }
 
-/** Result of a signed-URL mint (integration-contracts §1.1, D-F). */
+/** Result of a signed-URL mint. */
 export interface SignedDownloadUrlResult {
   readonly arquivoUrl: string;
   /** ISO-8601 UTC expiry timestamp. */
@@ -51,7 +51,7 @@ export interface SignedDownloadUrlResult {
  * Port interface for the publication history queries that PUB exports to PROJ.
  *
  * Implementations:
- *  - Real (P6): src/modules/pub/publication-history.service.ts
+ *  - Real: src/modules/pub/publication-history.service.ts
  */
 export interface PublicationHistoryPort {
   /**
@@ -59,7 +59,7 @@ export interface PublicationHistoryPort {
    * each project. Projects without publications are absent from the Map.
    *
    * MUST execute a single batched DB query — no N+1 per projetoId.
-   * (integration-contracts §1.1, proj api-contract §6.4)
+   *
    *
    * @param projetoIds - list of project UUIDs to query (may be empty)
    * @param empresaId  - active tenant (used for observability/logging only;

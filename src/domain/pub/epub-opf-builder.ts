@@ -1,9 +1,9 @@
 /**
- * Generates the OPF Package Document (SPEC-03 §2, ePub 3 spec §2.4).
+ * Generates the OPF Package Document (ePub 3 spec §2.4).
  *
  * Produces: <package> with <metadata>, <manifest>, and <spine>.
  * All items use stable IDs derived from their path — no volatile timestamps
- * or random values (determinism requirement, epub-builder.spec §criteria).
+ * or random values (determinism requirement).
  *
  * Domain-pure: no @nestjs/* or @prisma/* imports.
  */

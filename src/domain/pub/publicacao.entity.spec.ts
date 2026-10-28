@@ -22,7 +22,7 @@ describe('PublicacaoEntity', () => {
     expect(publicacao.artefatoRef).toBeUndefined();
   });
 
-  it('transitions gerando -> validando -> publicado with warnings only (D-Q)', () => {
+  it('transitions gerando -> validando -> publicado with warnings only', () => {
     const publicacao = PublicacaoEntity.iniciar({ id: publicacaoId, projetoId, sequencia: 1, iniciadaEm })
       .iniciarValidacao()
       .concluirPublicado({

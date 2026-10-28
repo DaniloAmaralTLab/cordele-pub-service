@@ -1,5 +1,5 @@
 /**
- * epubcheck message class (`validation_message.severity`, data-model.md §2.2).
+ * Epubcheck message class (`validation_message.severity`).
  *
  * `error` rows drive `EpubcheckStatus.ERROS_CRITICOS`; `warning` rows drive
  * `EpubcheckStatus.AVISOS` when no `error` row is present.

@@ -12,7 +12,7 @@ export interface ValidationMessageProps {
 }
 
 /**
- * One epubcheck report line (`validation_message`, data-model.md §2.2).
+ * One epubcheck report line (`validation_message`).
  *
  * Pure domain object — child of the `Publicacao` aggregate, persisted for
  * auditability of why a build was rejected or warned.

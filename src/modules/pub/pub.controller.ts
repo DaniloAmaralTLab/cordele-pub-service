@@ -53,10 +53,10 @@ import { type GetSignedDownloadUrlUseCase } from './use-cases/get-signed-downloa
 import { type ListValidationMessagesUseCase } from './use-cases/list-validation-messages.use-case';
 
 /**
- * HTTP adapter for the PUB (Publicação) bounded context (api-contract.md §4).
+ * HTTP adapter for the PUB (Publicação) bounded context.
  *
- * P2: the five routes are wired to the real use cases (PUB-003..006). No
- * infra behind the outbound ports yet (P3 persistence, P4 adapters) — this
+ * The five routes are wired to the real use cases. No
+ * infra behind the outbound ports — this
  * controller and its use cases are unit-tested with mocked ports; the app
  * boots end-to-end once those bindings land.
  *
@@ -64,7 +64,7 @@ import { type ListValidationMessagesUseCase } from './use-cases/list-validation-
  * (mirroring imp-service/proj-service), so it protects every route below
  * without this file importing anything from `infrastructure/`.
  *
- * RULE-04: this file is in modules/ and does NOT import from infrastructure/.
+ * This file is in modules/ and does NOT import from infrastructure/.
  */
 @ApiTags('pub')
 @ApiBearerAuth('bearer')
@@ -88,14 +88,14 @@ export class PubController {
   ) {}
 
   // ---------------------------------------------------------------------
-  // 4.1 POST /api/v1/pub/projetos/:projetoId/publicacoes — trigger export (T07)
+  // 4.1 POST /api/v1/pub/projetos/:projetoId/publicacoes — trigger export
   // ---------------------------------------------------------------------
   @Post('projetos/:projetoId/publicacoes')
   @RequiredScopes('pub:write')
-  @ApiOperation({ summary: 'Trigger an ePub 3 export for a project (T07)' })
+  @ApiOperation({ summary: 'Trigger an ePub 3 export for a project' })
   @ApiCreatedResponse({
     type: PublicacaoStatusDto,
-    description: 'Build enqueued (202), or the in-flight build returned (200, D-R).',
+    description: 'Build enqueued (202), or the in-flight build returned (200).',
   })
   async trigger(
     @Param('projetoId', ParseUUIDPipe) projetoId: string,
@@ -104,7 +104,7 @@ export class PubController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<PublicacaoStatusDto> {
     // Strip "Bearer " prefix to obtain the raw JWT for downstream propagation
-    // (INT-PUB-001, INT-PUB-003): the token is passed explicitly through
+    //: the token is passed explicitly through
     // GeneratePublicationInput so the async PublicationBuildJob can forward it
     // to IMP and PROJ HTTP adapters after the request context is gone.
     const bearerToken = authHeader?.replace(/^Bearer\s+/i, '') ?? '';
@@ -118,11 +118,11 @@ export class PubController {
   }
 
   // ---------------------------------------------------------------------
-  // 4.2 GET .../publicacoes/:publicacaoId/status — poll build status (T07)
+  // 4.2 GET .../publicacoes/:publicacaoId/status — poll build status
   // ---------------------------------------------------------------------
   @Get('projetos/:projetoId/publicacoes/:publicacaoId/status')
   @RequiredScopes('pub:read')
-  @ApiOperation({ summary: 'Poll the build status of a publication (T07)' })
+  @ApiOperation({ summary: 'Poll the build status of a publication' })
   @ApiOkResponse({ type: PublicacaoStatusDto })
   @ApiNotFoundResponse({ description: 'publicacaoId not found in this project/empresa.' })
   async status(
@@ -139,11 +139,11 @@ export class PubController {
   }
 
   // ---------------------------------------------------------------------
-  // 4.3 GET .../publicacoes — publication history (T08)
+  // 4.3 GET .../publicacoes — publication history
   // ---------------------------------------------------------------------
   @Get('projetos/:projetoId/publicacoes')
   @RequiredScopes('pub:read')
-  @ApiOperation({ summary: 'List the publication history of a project (T08)' })
+  @ApiOperation({ summary: 'List the publication history of a project' })
   @ApiOkResponse({ type: [PublicacaoHistoryItemDto] })
   async history(
     @Param('projetoId', ParseUUIDPipe) projetoId: string,
@@ -154,11 +154,11 @@ export class PubController {
   }
 
   // ---------------------------------------------------------------------
-  // 4.4 GET .../publicacoes/:publicacaoId/download — signed download URL (T08)
+  // 4.4 GET .../publicacoes/:publicacaoId/download — signed download URL
   // ---------------------------------------------------------------------
   @Get('projetos/:projetoId/publicacoes/:publicacaoId/download')
   @RequiredScopes('pub:read')
-  @ApiOperation({ summary: 'Mint a short-TTL signed download URL (T08, D-F/D-R)' })
+  @ApiOperation({ summary: 'Mint a short-TTL signed download URL' })
   @ApiOkResponse({ type: DownloadUrlDto })
   @ApiConflictResponse({ description: 'Artifact not available (erros_criticos or pendente).' })
   @ApiNotFoundResponse({ description: 'publicacaoId not found in this project/empresa.' })
@@ -171,11 +171,11 @@ export class PubController {
   }
 
   // ---------------------------------------------------------------------
-  // 4.5 GET .../publicacoes/stats — publication KPIs (T07/T08, D-O)
+  // 4.5 GET .../publicacoes/stats — publication KPIs
   // ---------------------------------------------------------------------
   @Get('projetos/:projetoId/publicacoes/stats')
   @RequiredScopes('pub:read')
-  @ApiOperation({ summary: 'Get publication KPIs for a project (D-O)' })
+  @ApiOperation({ summary: 'Get publication KPIs for a project' })
   @ApiOkResponse({ type: PublicationStatsDto })
   async stats(
     @Param('projetoId', ParseUUIDPipe) projetoId: string,
@@ -185,12 +185,12 @@ export class PubController {
   }
 
   // ---------------------------------------------------------------------
-  // 4.6 GET .../publicacoes/:publicacaoId/validation-messages — detailed list (PUB-016)
+  // 4.6 GET .../publicacoes/:publicacaoId/validation-messages — detailed list
   // ---------------------------------------------------------------------
   @Get('projetos/:projetoId/publicacoes/:publicacaoId/validation-messages')
   @RequiredScopes('pub:read')
   @ApiOperation({
-    summary: 'List detailed epubcheck validation messages for a publication (PUB-016)',
+    summary: 'List detailed epubcheck validation messages for a publication',
   })
   @ApiOkResponse({
     type: [ValidationMessageItemDto],
@@ -258,7 +258,7 @@ export class PubController {
       arquivoDisponivel: publicacao.arquivoDisponivel(),
       iniciadaEm: publicacao.iniciadaEm.toISOString(),
       concluidaEm: publicacao.concluidaEm?.toISOString() ?? null,
-      // ADR-004: KPIs de resumo — nulos enquanto build em andamento ou com_erros
+      // KPIs de resumo — nulos enquanto build em andamento ou com_erros
       tamanhoBytes: publicacao.tamanhoBytes ?? null,
       totalCapitulos: publicacao.totalCapitulos ?? null,
       totalImagens: publicacao.totalImagens ?? null,

@@ -21,7 +21,7 @@ import { JwtAuthGuard } from './jwt-auth.guard';
  * `EmpresaContextMiddleware` is registered in `AppModule` (via `configure()`)
  * to cover all routes without `PubModule` importing from `infrastructure/`.
  *
- * P5 (PUB-013): scope enforcement added to `JwtAuthGuard.canActivate` via
+ * Scope enforcement added to `JwtAuthGuard.canActivate` via
  * `@RequiredScopes()` decorator (modules/pub/decorators/require-scope.decorator.ts).
  */
 @Global()

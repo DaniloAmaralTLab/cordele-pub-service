@@ -8,11 +8,10 @@ import { CompositionLayoutStub, CompositionMetadataStub } from './composition-re
 import { ManuscriptContentStub } from './manuscript-content.stub';
 
 /**
- * Thin no-op stub for AdvanceProjetoStatusPort (PUB-012).
+ * Thin no-op stub for AdvanceProjetoStatusPort.
  *
  * Logs nothing and always reports `changed: true` so the build job
  * completes its terminal path without a real PROJ service.
- * Replaced in P6 (INT-PUB-003) by the real in-process adapter.
  */
 @Injectable()
 class AdvanceProjetoStatusStub implements AdvanceProjetoStatusPort {
@@ -24,12 +23,12 @@ class AdvanceProjetoStatusStub implements AdvanceProjetoStatusPort {
 /**
  * Global stub module — binds all cross-context outbound ports (IMP, COMP, PROJ)
  * to in-process fixtures so `PubModule` is fully wired in dev/test without
- * requiring sibling services (PUB-012, P4).
+ * requiring sibling services.
  *
- * Used when `PUB_USE_STUBS=true` or `NODE_ENV=test`. In production (P6)
+ * Used when `PUB_USE_STUBS=true` or `NODE_ENV=test`. In production
  * these providers are replaced by real adapters without touching domain/modules.
  *
- * RULE-05 note: infrastructure/ imports port interfaces (type-only) from
+ * Note: infrastructure/ imports port interfaces (type-only) from
  * modules/pub/ports/ — acceptable for implementing the contract; no service
  * classes or implementation classes are imported from modules/.
  */

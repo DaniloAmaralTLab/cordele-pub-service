@@ -11,10 +11,10 @@ export interface GetPublicationHistoryInput {
 
 /**
  * GetPublicationHistoryUseCase — publication history, newest first
- * (api-contract §4.3, T08). Also the read model behind PROJ's
- * `PublicationHistoryPort` (exported in P6).
+ *. Also the read model behind PROJ's
+ * `PublicationHistoryPort`.
  *
- * RULE-07: requires the empresa context before touching the repository.
+ * Requires the empresa context before touching the repository.
  */
 @Injectable()
 export class GetPublicationHistoryUseCase {

@@ -32,7 +32,7 @@ export interface PublicationBuildJobInput {
   readonly projetoId: string;
   readonly empresaId: string;
   /**
-   * Raw JWT bearer token propagated from the originating HTTP request (INT-PUB-001/003).
+   * Raw JWT bearer token propagated from the originating HTTP request.
    *
    * Captured and passed explicitly by `GeneratePublicationUseCase` before the
    * fire-and-forget `Promise.resolve().then(...)` boundary — AsyncLocalStorage
@@ -43,23 +43,21 @@ export interface PublicationBuildJobInput {
 }
 
 /**
- * PublicationBuildJob — the asynchronous in-process build (api-contract §7.2).
+ * PublicationBuildJob — the asynchronous in-process build.
  *
  * Runs after `GeneratePublicationUseCase` enqueues it, outside the request
  * thread. Steps: assemble the OCF/ePub 3 package from the manuscript +
  * composition inputs, validate via `EpubValidationPort` (epubcheck is
- * authoritative for `publicado` vs `com_erros`, ADR-003), persist the
+ * authoritative for `publicado` vs `com_erros`), persist the
  * terminal outcome, then request the project status via
- * `AdvanceProjetoStatusPort` at most once (D-P) — a failure there never
- * discards the recorded build result (integration-contracts.md §2.4).
+ * `AdvanceProjetoStatusPort` at most once — a failure there never
+ * discards the recorded build result.
  *
  * The actual OCF/ePub 3 assembly (walking the content tree into XHTML +
- * spine + nav) is the `EpubBuilder` domain service, delivered in P4
- * (PUB-009). `assemble()` below is an orchestration-only placeholder that
- * keeps this job's shape (and its unit tests) stable across P2 → P4; P4
- * replaces its body with a call into the real domain service.
+ * spine + nav) is the `EpubBuilder` domain service; `assemble()` below
+ * delegates to it.
  *
- * RULE-04: this file is in modules/ and does NOT import from infrastructure/.
+ * This file is in modules/ and does NOT import from infrastructure/.
  */
 @Injectable()
 export class PublicationBuildJob {
@@ -114,10 +112,10 @@ export class PublicationBuildJob {
         buildResult,
         input,
       );
-      // Persist the terminal outcome BEFORE dispatching any domain event (PUB-004).
+      // Persist the terminal outcome BEFORE dispatching any domain event.
       await this.repository.save(terminal);
 
-      // Dispatch domain event after persistence — timing is contractual (PUB-004).
+      // Dispatch domain event after persistence — timing is contractual.
       this.dispatchOutcomeEvent(terminal, targetStatus, input, buildResult);
 
       await this.requestProjectStatus(input.projetoId, targetStatus, input.publicacaoId, bearerToken);
@@ -127,10 +125,9 @@ export class PublicationBuildJob {
   }
 
   /**
-   * Assembles the OCF/ePub 3 package using the `EpubBuilder` domain service
-   * (PUB-009, P4).
+   * Assembles the OCF/ePub 3 package using the `EpubBuilder` domain service.
    *
-   * ADR-004: retorna o objeto `{ epubBytes, totalCapitulos, totalImagens }` em vez de
+   * Retorna o objeto `{ epubBytes, totalCapitulos, totalImagens }` em vez de
    * apenas o Buffer, para que `resolveOutcome` possa persistir os KPIs de resumo.
    *
    * Se a árvore de conteúdo ou os metadados estiverem ausentes, retorna um Buffer vazio
@@ -208,7 +205,7 @@ export class PublicationBuildJob {
         totalErros,
         totalAvisos,
         concluidaEm,
-        // ADR-004: KPIs de resumo do ePub gerado
+        // KPIs de resumo do ePub gerado
         tamanhoBytes: storeResult.bytesWritten,
         totalCapitulos: buildResult.totalCapitulos,
         totalImagens: buildResult.totalImagens,
@@ -219,7 +216,7 @@ export class PublicationBuildJob {
 
   /**
    * Calls `EpubValidationPort.validate` with explicit handling for
-   * `EpubcheckUnavailableError` (ADR-003: never publish an unvalidated artifact).
+   * `EpubcheckUnavailableError` (never publish an unvalidated artifact).
    *
    * Returns `null` when epubcheck could not run and the outcome has already been
    * recorded as `com_erros` — the caller must return immediately.
@@ -243,7 +240,7 @@ export class PublicationBuildJob {
           totalAvisos: 0,
           concluidaEm: new Date(),
         });
-        // Persist failure BEFORE dispatching the domain event (PUB-004).
+        // Persist failure BEFORE dispatching the domain event.
         await this.repository.save(comErros);
         this.dispatchOutcomeEvent(comErros, 'com_erros', input, { epubBytes: Buffer.alloc(0), totalCapitulos: 0, totalImagens: 0 });
         await this.requestProjectStatus(input.projetoId, 'com_erros', input.publicacaoId, input.bearerToken ?? '');
@@ -255,7 +252,7 @@ export class PublicationBuildJob {
 
   /**
    * Dispatches the appropriate domain event after the terminal Publicacao
-   * state has been **durably persisted** (PUB-004).
+   * state has been **durably persisted**.
    *
    * Called as the LAST step before `requestProjectStatus` so the event is
    * never emitted before the database write commits. Best-effort: failures
@@ -305,7 +302,7 @@ export class PublicationBuildJob {
     return firstError ? `${firstError.code}: ${firstError.message}` : 'epubcheck reported fatal errors.';
   }
 
-  /** Called at most once per terminal outcome (D-P); never discards the recorded result. */
+  /** Called at most once per terminal outcome; never discards the recorded result. */
   private async requestProjectStatus(
     projetoId: string,
     targetStatus: ProjetoTargetStatus,

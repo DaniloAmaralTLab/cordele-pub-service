@@ -26,12 +26,12 @@ const useStubs = process.env['PUB_USE_STUBS'] === 'true' || process.env['NODE_EN
 const httpAdapterProviders: Provider[] = useStubs
   ? []
   : [
-      // INT-PUB-001: real HTTP adapter for ManuscriptContentPort (IMP service).
+      // real HTTP adapter for ManuscriptContentPort (IMP service).
       { provide: MANUSCRIPT_CONTENT_PORT, useClass: ImpManuscriptContentAdapter },
-      // INT-PUB-002: real HTTP adapters for CompositionMetadataPort and CompositionLayoutPort (COMP service).
+      // real HTTP adapters for CompositionMetadataPort and CompositionLayoutPort (COMP service).
       { provide: COMPOSITION_METADATA_PORT, useClass: CompCompositionMetadataAdapter },
       { provide: COMPOSITION_LAYOUT_PORT, useClass: CompCompositionLayoutAdapter },
-      // INT-PUB-003: real HTTP adapter for AdvanceProjetoStatusPort (PROJ service).
+      // real HTTP adapter for AdvanceProjetoStatusPort (PROJ service).
       { provide: ADVANCE_PROJETO_STATUS_PORT, useClass: ProjProjectStatusAdapter },
     ];
 

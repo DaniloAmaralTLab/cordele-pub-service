@@ -6,15 +6,14 @@ import { CorrelationInterceptor } from './correlation.interceptor';
 import { PubLoggerService } from './pub-logger.service';
 
 /**
- * PubObservabilityModule — cross-cutting observability for the PUB context
- * (PUB-017, P7, SPEC-07).
+ * PubObservabilityModule — cross-cutting observability for the PUB context.
  *
  * ### Registered providers
  * - `CorrelationContextService` — AsyncLocalStorage wrapper; propagates
  *   `X-Correlation-Id` through the async call chain.
  * - `CorrelationInterceptor` — registered as `APP_INTERCEPTOR` so every route
  *   in the process receives the `X-Correlation-Id` response header without
- *   any controller importing from `infrastructure/` (RULE-04).
+ *   any controller importing from `infrastructure/`.
  * - `PubLoggerService` — structured JSON logger with correlation + empresa
  *   fields; exported globally for injection in `PubModule` use-cases and jobs.
  *
@@ -24,8 +23,8 @@ import { PubLoggerService } from './pub-logger.service';
  * importing this module explicitly — mirrors the pattern used by
  * `PersistenceModule` and `AuthModule` in `AppModule`.
  *
- * RULE-04: modules/ does not import infrastructure/. ✓
- * RULE-08: no console.log — providers use NestJS Logger. ✓
+ * modules/ does not import infrastructure/. ✓
+ * no console.log — providers use NestJS Logger. ✓
  */
 @Global()
 @Module({

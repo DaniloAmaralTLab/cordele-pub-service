@@ -10,7 +10,7 @@ import { GetPublicationStatusUseCase } from './use-cases/get-publication-status.
 import { GetSignedDownloadUrlUseCase } from './use-cases/get-signed-download-url.use-case';
 import { ListValidationMessagesUseCase } from './use-cases/list-validation-messages.use-case';
 import { GetLatestBatchUseCase } from './use-cases/get-latest-batch.use-case';
-// P6 — PUB-014/015: exported in-process ports for PROJ
+// Exported in-process ports for PROJ
 import { PublicationHistoryService } from './publication-history.service';
 import { PublicationErasureService } from './publication-erasure.service';
 import {
@@ -29,19 +29,19 @@ import {
 /**
  * PUB — Publicação bounded context module.
  *
- * P3 (PUB-007/008): `PublicacaoRepositoryPort` (Symbol) is now provided
+ * `PublicacaoRepositoryPort` (Symbol) is now provided
  * globally by `PersistenceModule` (`@Global()`, imported in `AppModule`).
  * The use cases registered here receive the real `PrismaPublicacaoRepository`
  * via constructor injection from the global scope — no direct import of
  * infrastructure/ is needed here.
  *
- * P6 (PUB-014/015): `PUBLICATION_HISTORY_PORT` and `PUBLICATION_ERASURE_PORT`
+ * `PUBLICATION_HISTORY_PORT` and `PUBLICATION_ERASURE_PORT`
  * are registered here and exported so PROJ can inject them directly in a
  * co-located (monolith) deployment. Both services depend only on globally
  * provided tokens (`PUBLICACAO_REPOSITORY_PORT`, `FILE_STORAGE_PORT`) —
- * no infrastructure/ imports needed (RULE-04 compliant).
+ * no infrastructure/ imports needed.
  *
- * RULE-04: modules/ must not import infrastructure/ directly. ✓
+ * modules/ must not import infrastructure/ directly. ✓
  *   `PubModule` does not import `PersistenceModule` or `StorageModule` —
  *   it inherits their exports from the global scope registered by `AppModule`.
  */
@@ -57,13 +57,13 @@ import {
     { provide: GET_SIGNED_DOWNLOAD_URL_USE_CASE, useClass: GetSignedDownloadUrlUseCase },
     { provide: GET_PUBLICATION_STATS_USE_CASE, useClass: GetPublicationStatsUseCase },
 
-    // --- PUB-016: List validation messages ---
+    // --- List validation messages ---
     { provide: LIST_VALIDATION_MESSAGES_USE_CASE, useClass: ListValidationMessagesUseCase },
 
-    // --- api-contract §4.7: Batch latest publication status (PROJ integration) ---
+    // --- Batch latest publication status (PROJ integration) ---
     { provide: GET_LATEST_BATCH_USE_CASE, useClass: GetLatestBatchUseCase },
 
-    // --- P16 — PUB-004: Domain-event publisher ---
+    // --- Domain-event publisher ---
     /**
      * Provides a Node.js EventEmitter adapter for `EventPublisherPort`.
      * `PublicationBuildJob` uses it to dispatch `publication.succeeded` /
@@ -71,14 +71,14 @@ import {
      *
      * A single shared EventEmitter instance is sufficient for in-process
      * event dispatch. Downstream handlers can subscribe via standard Node.js
-     * EventEmitter API. RULE-04 compliant: no infrastructure/ import here.
+     * EventEmitter API. No infrastructure/ import here.
      */
     {
       provide: EVENT_PUBLISHER_PORT,
       useFactory: () => new EventEmitter(),
     },
 
-    // --- P6 — PUB-014: PublicationHistoryPort (exported to PROJ) ---
+    // --- PublicationHistoryPort (exported to PROJ) ---
     /**
      * Provides the in-process read-model over the Publicacao aggregate for PROJ.
      * PROJ's GetPublicationHistoryUseCase and GetProjetoLibraryUseCase inject
@@ -89,7 +89,7 @@ import {
      */
     { provide: PUBLICATION_HISTORY_PORT, useClass: PublicationHistoryService },
 
-    // --- P6 — PUB-015: PublicationErasurePort (exported to PROJ) ---
+    // --- PublicationErasurePort (exported to PROJ) ---
     /**
      * Provides the LGPD erasure implementation for PROJ's delete cascade.
      * PROJ's DeleteProjetoUseCase injects this via PUBLICATION_ERASURE_PORT.

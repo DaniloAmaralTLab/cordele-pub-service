@@ -1,7 +1,7 @@
 /**
  * Inbound port: PublicationErasurePort
  *
- * Exported by PUB (P6 — PUB-015) and injected by PROJ via DI token
+ * Exported by PUB and injected by PROJ via DI token
  * PUBLICATION_ERASURE_PORT (pub.tokens.ts). Purges all publication data for a
  * project as the first leaf of the LGPD erasure cascade (proj DeleteProjetoUseCase —
  * PROJ-016). Called before CompositionErasurePort and ManuscriptErasurePort.
@@ -12,8 +12,8 @@
  *  - A failure MUST propagate (no silent degradation): the project row must
  *    never be deleted while PUB data may still exist.
  *
- * RULE-01: zero @prisma/client imports.
- * RULE-02: zero @nestjs/* imports.
+ * Zero @prisma/client imports.
+ * zero @nestjs/* imports.
  * Real implementation: src/modules/pub/publication-erasure.service.ts
  * DI token: PUBLICATION_ERASURE_PORT (pub.tokens.ts)
  */

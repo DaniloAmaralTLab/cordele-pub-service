@@ -24,18 +24,18 @@ import { PubObservabilityModule } from './modules/pub/observability/pub-observab
  *
  * `JwtAuthGuard` is registered globally here so every route is protected
  * without `PubController` (or any use case) importing `infrastructure/`
- * directly — RULE-04.
+ * directly.
  *
- * P3 (PUB-007/008): `PersistenceModule` is registered here as `@Global()` so
+ * `PersistenceModule` is registered here as `@Global()` so
  * `PubModule` receives `PublicacaoRepositoryPort` from the global scope without
- * importing `infrastructure/` directly (RULE-04 compliant).
+ * importing `infrastructure/` directly.
  *
- * P5 (PUB-013): `EmpresaContextMiddleware` is registered here (root
+ * `EmpresaContextMiddleware` is registered here (root
  * composition) so it covers all routes without requiring `PubModule` to import
  * from `infrastructure/`. The `APP_GUARD` order matters — ThrottlerGuard first
  * (rate limiting), then JwtAuthGuard (authentication + scope enforcement).
  *
- * P6 (INT-PUB-001/003): When `PUB_USE_STUBS` is not `true`, the real HTTP
+ * When `PUB_USE_STUBS` is not `true`, the real HTTP
  * adapters (`ImpManuscriptContentAdapter`, `ProjProjectStatusAdapter`) are
  * registered globally to override the stub bindings from `StubsModule`.
  * `StubsModule` is always loaded first (for COMP stubs that have no real
@@ -56,14 +56,14 @@ import { PubObservabilityModule } from './modules/pub/observability/pub-observab
     HealthModule,
     PersistenceModule,
     AuthModule,
-    // P4 (PUB-010/011/012): infra adapters registered globally so PubModule
-    // receives port tokens without importing infrastructure/ directly (RULE-04).
+    // infra adapters registered globally so PubModule
+    // receives port tokens without importing infrastructure/ directly.
     ValidationModule,
     StorageModule,
     // StubsModule always loaded — provides stubs for all cross-service ports
     // (IMP, COMP, PROJ). Real HTTP adapters override IMP/PROJ/COMP tokens in
     // PubInfraBindingsModule when PUB_USE_STUBS != true and NODE_ENV != test.
-    // INT-PUB-002 (DONE P10): CompCompositionMetadataAdapter/CompCompositionLayoutAdapter
+    // CompCompositionMetadataAdapter/CompCompositionLayoutAdapter
     // are registered in PubInfraBindingsModule and override the COMP stubs in production.
     StubsModule,
     PubInfraBindingsModule,

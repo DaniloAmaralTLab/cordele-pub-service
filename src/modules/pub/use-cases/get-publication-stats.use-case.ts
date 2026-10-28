@@ -24,11 +24,10 @@ export interface PublicationStatsResult {
 }
 
 /**
- * GetPublicationStatsUseCase — publication KPIs (api-contract §4.5, T07/T08,
- * D-O). Computed live from PUB's own `Publicacao` rows — never from a
+ * GetPublicationStatsUseCase — publication KPIs. Computed live from PUB's own `Publicacao` rows — never from a
  * separate analytics store.
  *
- * RULE-07: requires the empresa context before touching the repository.
+ * Requires the empresa context before touching the repository.
  */
 @Injectable()
 export class GetPublicationStatsUseCase {
@@ -54,7 +53,7 @@ export class GetPublicationStatsUseCase {
       (p) => p.status === PublicacaoStatus.GERANDO || p.status === PublicacaoStatus.VALIDANDO,
     );
 
-    // listByProjeto returns newest-first (api-contract §4.3).
+    // listByProjeto returns newest-first.
     const ultima = publicacoes[0] ?? null;
 
     return {

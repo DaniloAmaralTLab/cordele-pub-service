@@ -6,10 +6,10 @@ import { AsyncLocalStorage } from 'async_hooks';
  *
  * Populated by `EmpresaContextMiddleware` for HTTP requests, and explicitly
  * re-bound by `GeneratePublicationUseCase` for the async `PublicationBuildJob`
- * (INT-PUB-006: context is captured synchronously before the fire-and-forget
+ * (context is captured synchronously before the fire-and-forget
  * dispatch, then restored inside the job via `runAs`).
  *
- * `bearerToken` (INT-PUB-002): the raw JWT bearer token from the originating
+ * `bearerToken`: the raw JWT bearer token from the originating
  * HTTP request, stored so outbound HTTP adapters (e.g. CompCompositionMetadataAdapter)
  * can retrieve it via `getBearerToken()` without changing port signatures.
  * `null` inside async jobs unless explicitly propagated via `runAs(..., bearerToken)`.
@@ -45,7 +45,6 @@ export interface EmpresaRequestContext {
  * const ctx = empresaContextService.get();
  * ```
  *
- * @see docs/architecture/shared/multi-empresa.md
  */
 @Injectable()
 export class EmpresaContextService {
@@ -67,7 +66,7 @@ export class EmpresaContextService {
    * `empresaId`.
    *
    * Usado pelo `GeneratePublicationUseCase` para restaurar o contexto dentro
-   * do job assíncrono (INT-PUB-006). O `userId` é omitido pois o job não
+   * do job assíncrono. O `userId` é omitido pois o job não
    * executa operações que requerem identidade do usuário — apenas as do
    * schema de empresa.
    *
@@ -76,7 +75,7 @@ export class EmpresaContextService {
    * `runAs` dentro do callback garante que toda operação interna do job
    * (inclusive sub-promises) vê o contexto correto.
    *
-   * `bearerToken` (INT-PUB-002): quando informado, é armazenado no ALS para
+   * `bearerToken`: quando informado, é armazenado no ALS para
    * que adapters HTTP de saída (ex.: CompCompositionMetadataAdapter) possam
    * recuperá-lo via `getBearerToken()` sem mudança de assinatura de porta.
    * Parâmetro opcional; chamadas existentes sem o terceiro argumento continuam
@@ -91,7 +90,7 @@ export class EmpresaContextService {
    *   - não há contexto ativo (rota pública, test unitário sem middleware), ou
    *   - o contexto foi criado sem token (job assíncrono sem `runAs(..., token)`).
    *
-   * Usado pelos adapters HTTP de saída (INT-PUB-002) para propagar o JWT do
+   * Usado pelos adapters HTTP de saída para propagar o JWT do
    * request original às chamadas ao comp-service, sem alterar as assinaturas
    * das portas `CompositionMetadataPort` e `CompositionLayoutPort`.
    */
@@ -113,7 +112,7 @@ export class EmpresaContextService {
   /**
    * Retorna o contexto de empresa ativo ou lança `Error` se ausente.
    *
-   * Use em repositórios e use-cases onde o contexto é obrigatório (RULE-07).
+   * Use em repositórios e use-cases onde o contexto é obrigatório.
    */
   require(): EmpresaRequestContext {
     const ctx = this.als.getStore();

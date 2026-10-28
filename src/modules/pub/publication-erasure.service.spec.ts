@@ -5,7 +5,7 @@ import type { FileStoragePort } from './ports/file-storage.port';
 import { PublicationErasureService } from './publication-erasure.service';
 
 /**
- * Unit tests for `PublicationErasureService` (PUB-015).
+ * Unit tests for `PublicationErasureService`.
  *
  * `PublicationErasureService` implements `PublicationErasurePort.erase()` and
  * purges all publication data for a project as the first leaf of the LGPD
@@ -21,7 +21,7 @@ import { PublicationErasureService } from './publication-erasure.service';
  *   - `erase()` propagates unexpected errors from the repository.
  *   - `erase()` propagates unexpected storage errors (non-ENOENT).
  *
- * RULE-04: this spec is in modules/ and only imports from domain/ and other
+ * This spec is in modules/ and only imports from domain/ and other
  * modules/ — no infrastructure/ imports.
  */
 describe('PublicationErasureService', () => {

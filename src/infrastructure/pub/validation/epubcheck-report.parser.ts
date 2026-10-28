@@ -3,15 +3,15 @@ import { EpubcheckStatus } from '../../../domain/pub/epubcheck-status.enum';
 import type { ValidationReport, ValidationReportMessage } from '../../../modules/pub/ports/epub-validation.port';
 
 /**
- * Parses the epubcheck JSON report into a `ValidationReport` (PUB-010, P4).
+ * Parses the epubcheck JSON report into a `ValidationReport`.
  *
- * epubcheck severity vocabulary (--json output):
+ * Epubcheck severity vocabulary (--json output):
  *   FATAL  → error   (never seen in practice from epubcheck; treated as ERROR)
  *   ERROR  → error
  *   WARNING → warning
  *   INFO, USAGE → info
  *
- * Verdict derivation (D-Q, ADR-003):
+ * Verdict derivation:
  *   any error   → ERROS_CRITICOS (com_erros, never published)
  *   only warnings → AVISOS       (published with warning summary)
  *   no messages   → VALIDO       (published)
@@ -46,7 +46,7 @@ function mapSeverity(epubcheckSeverity: string | undefined): ValidationSeverity 
 /**
  * Derives the epubcheck verdict from the list of mapped messages.
  * Only domain severity values are used — no epubcheck vocabulary leaks into
- * the verdict decision (integration-contracts.md §3.1).
+ * the verdict decision.
  */
 function deriveVerdict(
   messages: readonly ValidationReportMessage[],
